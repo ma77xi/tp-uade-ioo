@@ -164,4 +164,8 @@ public class Modelo {
 
 	}
 
+	public void quitarAutomovil(Automovil a) {
+		this.automoviles.remove(a);
+	}
+
 }
