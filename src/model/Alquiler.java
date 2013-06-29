@@ -174,4 +174,8 @@ public class Alquiler {
 
 	}
 
+	public boolean tenesCliente(int nroCliente) {
+		return this.cliente.sosCliente(nroCliente);
+	}
+
 }

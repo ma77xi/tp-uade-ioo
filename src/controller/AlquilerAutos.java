@@ -75,7 +75,7 @@ public class AlquilerAutos {
 
 	}
 
-	public void modificarClienteWeb(String nombre, String apellido, Date fechaNacimiento, String domicilio,
+	public RespuestaTransaccion modificarClienteWeb(String nombre, String apellido, Date fechaNacimiento, String domicilio,
 			String telefono, Long dni, String sexo, String nacionalidad, String usuario, String password) {
 
 		ClienteWeb c = (ClienteWeb) this.buscarCliente(dni);
@@ -83,14 +83,36 @@ public class AlquilerAutos {
 		if (c != null) {
 			c.actualizarDatos(nombre, apellido, fechaNacimiento, domicilio, dni, telefono, sexo, nacionalidad, usuario,
 					password);
+			return new RespuestaTransaccion(RespuestaSistema.OK);
+		}else{
+			return new RespuestaTransaccion(RespuestaSistema.CLIENTE_INEXISTENTE);
 		}
 
 	}
 
-	// TODO : eliminarCliente
+	public RespuestaTransaccion bajaCliente(int nroCliente) {
+		
+		Cliente c = buscarCliente(nroCliente);
+		if (c==null){
+			return new RespuestaTransaccion(RespuestaSistema.CLIENTE_INEXISTENTE);	
+		}
+		
+		for (Reserva reserva : this.reservas) {
+			if (reserva.tenesCliente(nroCliente)){
+			//	c.setBajaLogica(true); no deberiamos desactivarlo si tiene reservas, tiene q cancelar reservas primero
+			return new RespuestaTransaccion(RespuestaSistema.CLIENTE_CON_RESERVA);
+			}
+	}
+		for (Alquiler alquiler : this.alquileres) {
+			if (alquiler.tenesCliente(nroCliente)){
+				c.setBajaLogica(true);
+				return new RespuestaTransaccion(RespuestaSistema.OK, "Ciente desactivado");
+			}
+		}
 
-	public void bajaCliente(int nroCliente) {
-		clientes.remove(buscarCliente(nroCliente));
+		
+		clientes.remove(c);
+		return new RespuestaTransaccion(RespuestaSistema.OK, "Cliente eliminado");
 	}
 
 	private Cliente buscarCliente(Long dni) {
@@ -166,7 +188,6 @@ public class AlquilerAutos {
 			float combustible) {
 
 		Modelo m = this.buscarModelo(nroModelo);
-		// TODO : cambiar la creación de automóvil, que no dependa de modelo.
 		if (m != null) {
 			m.agregarAutomovil(anio, combustible, kilometraje, patente);
 			return new RespuestaTransaccion(RespuestaSistema.OK, String.valueOf(m.getNumeroModelo()));
@@ -180,8 +201,6 @@ public class AlquilerAutos {
 			float combustible, String nuevaPatente) {
 
 		Modelo m = this.buscarModelo(nroModelo);
-		// TODO : cambiar la modificación de automóvil, que no dependa de
-		// modelo.
 		if (m != null) {
 			int errorSistema = m.actualizarAutomovil(patente, anio, kilometraje, combustible, nuevaPatente);
 			return new RespuestaTransaccion(RespuestaSistema.fromCode(errorSistema));
@@ -196,10 +215,15 @@ public class AlquilerAutos {
 		Modelo m = this.buscarModelo(nroModelo);
 
 		if (m != null) {
-
 			Automovil a = m.buscarAutomovil(patente);
-			// TODO : terminar eliminar automóvil cuando esten el manejo de
-			// reservas.
+			
+			for (Reserva reserva : this.reservas) {
+				if (reserva.tenesAutomovil(a)){
+					return RespuestaSistema.AUTOMOVIL_RESERCADO.getKey();
+				}	
+			}
+			
+			m.quitarAutomovil(a);
 			return RespuestaSistema.OK.getKey();
 		}
 

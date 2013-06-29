@@ -79,6 +79,14 @@ public class Reserva {
 	public boolean sosReserva(int nroReserva) {
 		return this.numeroReserva == nroReserva;
 	}
+
+	public boolean tenesAutomovil(Automovil a) {
+		return this.automovil==a;
+	}
+
+	public boolean tenesCliente(int nroCliente) {
+		return this.cliente.sosCliente(nroCliente);
+	}
 	
 	
 }
