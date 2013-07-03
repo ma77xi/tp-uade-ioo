@@ -37,28 +37,26 @@ public class AlquilerAutos {
 			String telefono, Long dni, String sexo, String nacionalidad) {
 
 		if (buscarCliente(dni) == null) {
-
 			Cliente c = new Cliente(nombre, apellido, fechaNacimiento, domicilio, telefono, dni, sexo, nacionalidad);
-
 			this.clientes.add(c);
-
 			return new RespuestaTransaccion(RespuestaSistema.OK, String.valueOf(c.getNumeroCliente()));
-
 		} else {
 			return new RespuestaTransaccion(RespuestaSistema.CLIENTE_DUPLICADO);
 		}
 
 	}
 
-	public int altaClienteWeb(String nombre, String apellido, Date fechaNacimiento, String domicilio, String telefono,
-			Long dni, String sexo, String nacionalidad, String usuario, String password) {
+	public RespuestaTransaccion altaClienteWeb(String nombre, String apellido, Date fechaNacimiento, String domicilio,
+			String telefono, Long dni, String sexo, String nacionalidad, String usuario, String password) {
 
-		Cliente c = new ClienteWeb(nombre, apellido, fechaNacimiento, domicilio, telefono, dni, sexo, nacionalidad,
-				usuario, password);
-
-		this.clientes.add(c);
-
-		return c.getNumeroCliente();
+		if (buscarCliente(usuario) == null) {
+			Cliente c = new ClienteWeb(nombre, apellido, fechaNacimiento, domicilio, telefono, dni, sexo, nacionalidad,
+					usuario, password);
+			this.clientes.add(c);
+			return new RespuestaTransaccion(RespuestaSistema.OK, String.valueOf(c.getNumeroCliente()));
+		} else {
+			return new RespuestaTransaccion(RespuestaSistema.USUARIO_DUPLICADO);
+		}
 	}
 
 	public RespuestaTransaccion modificarCliente(Long numeroCliente, String nombre, String apellido,
@@ -75,8 +73,9 @@ public class AlquilerAutos {
 
 	}
 
-	public RespuestaTransaccion modificarClienteWeb(String nombre, String apellido, Date fechaNacimiento, String domicilio,
-			String telefono, Long dni, String sexo, String nacionalidad, String usuario, String password) {
+	public RespuestaTransaccion modificarClienteWeb(String nombre, String apellido, Date fechaNacimiento,
+			String domicilio, String telefono, Long dni, String sexo, String nacionalidad, String usuario,
+			String password) {
 
 		ClienteWeb c = (ClienteWeb) this.buscarCliente(dni);
 
@@ -84,33 +83,33 @@ public class AlquilerAutos {
 			c.actualizarDatos(nombre, apellido, fechaNacimiento, domicilio, dni, telefono, sexo, nacionalidad, usuario,
 					password);
 			return new RespuestaTransaccion(RespuestaSistema.OK);
-		}else{
+		} else {
 			return new RespuestaTransaccion(RespuestaSistema.CLIENTE_INEXISTENTE);
 		}
 
 	}
 
 	public RespuestaTransaccion bajaCliente(int nroCliente) {
-		
+
 		Cliente c = buscarCliente(nroCliente);
-		if (c==null){
-			return new RespuestaTransaccion(RespuestaSistema.CLIENTE_INEXISTENTE);	
+		if (c == null) {
+			return new RespuestaTransaccion(RespuestaSistema.CLIENTE_INEXISTENTE);
 		}
-		
+
 		for (Reserva reserva : this.reservas) {
-			if (reserva.tenesCliente(nroCliente)){
-			//	c.setBajaLogica(true); no deberiamos desactivarlo si tiene reservas, tiene q cancelar reservas primero
-			return new RespuestaTransaccion(RespuestaSistema.CLIENTE_CON_RESERVA);
+			if (reserva.tenesCliente(nroCliente)) {
+				// c.setBajaLogica(true); no deberiamos desactivarlo si tiene
+				// reservas, tiene q cancelar reservas primero
+				return new RespuestaTransaccion(RespuestaSistema.CLIENTE_CON_RESERVA);
 			}
-	}
+		}
 		for (Alquiler alquiler : this.alquileres) {
-			if (alquiler.tenesCliente(nroCliente)){
+			if (alquiler.tenesCliente(nroCliente)) {
 				c.setBajaLogica(true);
 				return new RespuestaTransaccion(RespuestaSistema.OK, "Ciente desactivado");
 			}
 		}
 
-		
 		clientes.remove(c);
 		return new RespuestaTransaccion(RespuestaSistema.OK, "Cliente eliminado");
 	}
@@ -141,6 +140,23 @@ public class AlquilerAutos {
 		}
 
 		return c;
+	}
+
+	private ClienteWeb buscarCliente(String user) {
+
+		for (int i = 0; i < this.clientes.size(); i++) {
+			try {
+				ClienteWeb c = (ClienteWeb) this.clientes.get(i);
+				if (c.sosCliente(user)) {
+					return c;
+				}
+			} catch (ClassCastException cce) {
+				// No es cliente web; no me interesa
+			}
+		}
+
+		return null;
+
 	}
 
 	public ClienteView buscarClienteView(int nroCliente) {
@@ -188,6 +204,7 @@ public class AlquilerAutos {
 			float combustible) {
 
 		Modelo m = this.buscarModelo(nroModelo);
+		// TODO : cambiar la creación de automóvil, que no dependa de modelo.
 		if (m != null) {
 			m.agregarAutomovil(anio, combustible, kilometraje, patente);
 			return new RespuestaTransaccion(RespuestaSistema.OK, String.valueOf(m.getNumeroModelo()));
@@ -201,6 +218,8 @@ public class AlquilerAutos {
 			float combustible, String nuevaPatente) {
 
 		Modelo m = this.buscarModelo(nroModelo);
+		// TODO : cambiar la modificación de automóvil, que no dependa de
+		// modelo.
 		if (m != null) {
 			int errorSistema = m.actualizarAutomovil(patente, anio, kilometraje, combustible, nuevaPatente);
 			return new RespuestaTransaccion(RespuestaSistema.fromCode(errorSistema));
@@ -216,13 +235,13 @@ public class AlquilerAutos {
 
 		if (m != null) {
 			Automovil a = m.buscarAutomovil(patente);
-			
+
 			for (Reserva reserva : this.reservas) {
-				if (reserva.tenesAutomovil(a)){
-					return RespuestaSistema.AUTOMOVIL_RESERCADO.getKey();
-				}	
+				if (reserva.tenesAutomovil(a)) {
+					return RespuestaSistema.AUTOMOVIL_RESERVADO.getKey();
+				}
 			}
-			
+
 			m.quitarAutomovil(a);
 			return RespuestaSistema.OK.getKey();
 		}
@@ -402,5 +421,23 @@ public class AlquilerAutos {
 					+ modelo.getModelo()));
 		}
 		return lista.toArray(new ElementoCombo[lista.size()]);
+	}
+
+	// --- Login ---
+	public RespuestaTransaccion login(String user, String password) {
+
+		for (int i = 0; i < this.clientes.size(); i++) {
+			try {
+				ClienteWeb c = (ClienteWeb) this.clientes.get(i);
+				if (c.sosCliente(user, password)) {
+					return new RespuestaTransaccion(RespuestaSistema.OK);
+				}
+			} catch (ClassCastException cce) {
+				// No es cliente web; no me interesa.
+			}
+		}
+
+		return new RespuestaTransaccion(RespuestaSistema.USUARIO_CONTRASEÑA_INVALIDO);
+
 	}
 }

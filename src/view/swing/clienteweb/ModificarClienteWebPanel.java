@@ -1,4 +1,4 @@
-package view.swing.auto;
+package view.swing.clienteweb;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -16,10 +16,10 @@ import util.RespuestaGui;
 import util.Util;
 import view.GuiEmpleado;
 import view.swing.MenuPanel;
-import view.vistas.ModeloView;
+import view.vistas.ClienteView;
 import controller.AlquilerAutos;
 
-public class ModificarModeloPanel extends MenuPanel implements ActionListener {
+public class ModificarClienteWebPanel extends MenuPanel implements ActionListener {
 
 	private static final long serialVersionUID = 3962037373678734873L;
 
@@ -27,11 +27,11 @@ public class ModificarModeloPanel extends MenuPanel implements ActionListener {
 	private JLabel busquedaLabel;
 	private JButton buscarButton;
 
-	private DatosModeloPanel datosModeloPanel;
+	private DatosClienteWebPanel datosClientePanel;
 
 	private JButton guardarButton;
 
-	public ModificarModeloPanel(AlquilerAutos sistema, GuiEmpleado gui) {
+	public ModificarClienteWebPanel(AlquilerAutos sistema, GuiEmpleado gui) {
 		super(sistema, gui);
 		this.init();
 	}
@@ -48,7 +48,7 @@ public class ModificarModeloPanel extends MenuPanel implements ActionListener {
 		gBC.insets = new Insets(2, 2, 2, 2);
 		gBC.anchor = GridBagConstraints.NORTHEAST;
 		gBC.gridx = 0;
-		this.busquedaLabel = new JLabel("Número modelo:");
+		this.busquedaLabel = new JLabel("Número Cliente:");
 		this.add(busquedaLabel, gBC);
 
 		gBC.gridx = 1;
@@ -65,9 +65,9 @@ public class ModificarModeloPanel extends MenuPanel implements ActionListener {
 		gBC.gridy = y;
 		gBC.gridx = 0;
 		gBC.gridwidth = 4;
-		this.datosModeloPanel = new DatosModeloPanel(sistema);
-		this.datosModeloPanel.enableAllComponents(false);
-		this.add(this.datosModeloPanel, gBC);
+		this.datosClientePanel = new DatosClienteWebPanel(sistema);
+		this.datosClientePanel.enableAllComponents(false);
+		this.add(this.datosClientePanel, gBC);
 
 		y++;
 
@@ -85,10 +85,10 @@ public class ModificarModeloPanel extends MenuPanel implements ActionListener {
 
 		if (event.getSource() == this.buscarButton) {
 			if (Util.numeroValido(this.busqueda.getText())) {
-				ModeloView modeloView = this.sistema.buscarModeloView(Integer.parseInt(this.busqueda.getText()));
-				if (modeloView != null) {
-					this.datosModeloPanel.cargaModelo(modeloView);
-					this.datosModeloPanel.enableAllComponents(true);
+				ClienteView clienteView = this.sistema.buscarClienteView(Integer.parseInt(this.busqueda.getText()));
+				if (clienteView != null) {
+					this.datosClientePanel.cargaCliente(clienteView);
+					this.datosClientePanel.enableAllComponents(true);
 				} else {
 					Util.mostrarError(this, "No se encontró el cliente número " + this.busqueda.getText());
 				}
@@ -96,12 +96,12 @@ public class ModificarModeloPanel extends MenuPanel implements ActionListener {
 				Util.mostrarError(this, "Número de cliente inválido");
 			}
 		} else if (event.getSource() == this.guardarButton) {
-			RespuestaGui respuesta = this.datosModeloPanel.modificarModelo(Long.parseLong(this.busqueda.getText()));
+			RespuestaGui respuesta = this.datosClientePanel.modificarCliente(Long.parseLong(this.busqueda.getText()));
 			if (respuesta.getTipoRespuesta().equals(ErrorGui.OK)) {
-				int seleccion = JOptionPane.showConfirmDialog(null, "Se actualizó correctamente el modelo."
-						+ "\nDesea modificar otro Modelo?", "Modificación Modelo", JOptionPane.YES_NO_OPTION);
+				int seleccion = JOptionPane.showConfirmDialog(null, "Se actualizó correctamente al cliente"
+						+ "\nDesea modificar otro Cliente?", "Modificación Cliente", JOptionPane.YES_NO_OPTION);
 				if (seleccion == JOptionPane.YES_OPTION) {
-					gui.modificarModeloReset();
+					gui.modificarClienteReset();
 				} else {
 					gui.reset();
 				}

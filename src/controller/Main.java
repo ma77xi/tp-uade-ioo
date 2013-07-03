@@ -1,6 +1,7 @@
 package controller;
 
-import model.Cliente;
+import util.RespuestaTransaccion;
+
 
 public class Main {
 
@@ -11,7 +12,26 @@ public class Main {
 		// TODO Auto-generated method stub
 		
 		AlquilerAutos controller = new AlquilerAutos();
-		controller.altaClienteWeb(null, null, null, null, null, null, null, null, "user", "pass");
+		
+		RespuestaTransaccion respuesta;
+		
+		respuesta = controller.altaClienteWeb(null, null, null, null, null, 11111L, null, null, "111", "222");
+		System.out.println(respuesta.getTipoRespuesta() + ": " + respuesta.getMensaje());
+		
+		respuesta = controller.altaCliente("Juan", null, null, null, null, 22222L, null, null);
+		System.out.println(respuesta.getTipoRespuesta() + ": " + respuesta.getMensaje());
+		
+		respuesta = controller.altaCliente("Cholo", null, null, null, null, 33333L, null, null);
+		System.out.println(respuesta.getTipoRespuesta() + ": " + respuesta.getMensaje());
+		
+		respuesta = controller.altaClienteWeb(null, null, null, null, null, 44444L, null, null, "aaa", "bbb");
+		System.out.println(respuesta.getTipoRespuesta() + ": " + respuesta.getMensaje());
+		
+		respuesta = controller.altaClienteWeb(null, null, null, null, null, 55555L, null, null, "aaa", "bbb");
+		System.out.println(respuesta.getTipoRespuesta() + ": " + respuesta.getMensaje());
+		
+		respuesta = controller.altaCliente("Cholo", null, null, null, null, 33333L, null, null);
+		System.out.println(respuesta.getTipoRespuesta() + ": " + respuesta.getMensaje());
 		
 	}
 
