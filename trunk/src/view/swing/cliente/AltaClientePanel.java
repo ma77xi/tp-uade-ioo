@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import util.ErrorGui;
 import util.RespuestaGui;
 import util.Util;
-import view.Gui;
+import view.GuiEmpleado;
 import view.swing.MenuPanel;
 import controller.AlquilerAutos;
 
@@ -22,7 +22,7 @@ public class AltaClientePanel extends MenuPanel implements ActionListener {
 	public DatosClientePanel datosClientePanel;
 	private JButton guardarButton;
 
-	public AltaClientePanel(AlquilerAutos sistema, Gui gui) {
+	public AltaClientePanel(AlquilerAutos sistema, GuiEmpleado gui) {
 		super(sistema, gui);
 		this.init();
 	}

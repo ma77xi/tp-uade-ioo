@@ -20,7 +20,7 @@ import view.swing.cliente.AltaClientePanel;
 import view.swing.cliente.ModificarClientePanel;
 import controller.AlquilerAutos;
 
-public class Gui extends JFrame implements ActionListener, MenuListener {
+public class GuiEmpleado extends JFrame implements ActionListener, MenuListener {
 
 	private static final long serialVersionUID = -6739731088517367469L;
 
@@ -49,13 +49,13 @@ public class Gui extends JFrame implements ActionListener, MenuListener {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				Gui g = new Gui();
+				GuiEmpleado g = new GuiEmpleado();
 				g.setVisible(true);
 			}
 		});
 	}
 
-	public Gui() {
+	public GuiEmpleado() {
 		sistema = new AlquilerAutos();
 		init();
 	}

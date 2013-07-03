@@ -38,4 +38,12 @@ public class ClienteWeb extends Cliente {
 		this.password = password;
 
 	}
+
+	public boolean sosCliente(String user, String password) {
+		return this.usuario.equals(user) && this.password.equals(password);
+	}
+
+	public boolean sosCliente(String user) {
+		return this.usuario.equals(user);
+	}
 }

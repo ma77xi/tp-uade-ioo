@@ -3,14 +3,16 @@ package util;
 public enum RespuestaSistema {
 
 	OK(0, "OK"), 
-	CLIENTE_INEXISTENTE(1, "Cliente inexistente."), 
-	CLIENTE_DUPLICADO(2, "Cliente duplicado."), 
+	CLIENTE_INEXISTENTE(1, "No se pudo encontrar el Cliente en el sistema."), 
+	CLIENTE_DUPLICADO(2, "El Cliente ya existe en el sistema."), 
 	CLIENTE_CON_RESERVA(8, "Cliente tiene Reservas"), 
-	MODELO_INEXISTENTE(3, "Modelo inexistente."), 
-	MODELO_DUPLICADO(4, "Modelo duplicado."), 
-	AUTOMOVIL_INEXISTENTE(5, "Automovil inexistente"), 
-	AUTOMOVIL_DUPLICADO(6, "Automovil duplicado"),
-	AUTOMOVIL_RESERCADO(7,"Automovil Reservado");
+	MODELO_INEXISTENTE(3, "No se pudo encontrar el Modelo en el sistema."), 
+	MODELO_DUPLICADO(4, "El Modelo ya existe en el sistema."), 
+	AUTOMOVIL_INEXISTENTE(5, "No se pudo encontrar el Automovil en el sistema"), 
+	AUTOMOVIL_DUPLICADO(6, "El Automovil ya existe en el sistema"),
+	AUTOMOVIL_RESERVADO(7,"Automovil Reservado"),
+	USUARIO_CONTRASEÑA_INVALIDO(9,"Usuario o contraseña inválido."),
+	USUARIO_DUPLICADO(10, "El usuario ya existe en el sistema");
 
 	private int key;
 	private String descripcion;

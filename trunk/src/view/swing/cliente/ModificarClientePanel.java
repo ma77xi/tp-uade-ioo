@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 import util.ErrorGui;
 import util.RespuestaGui;
 import util.Util;
-import view.Gui;
+import view.GuiEmpleado;
 import view.swing.MenuPanel;
 import view.vistas.ClienteView;
 import controller.AlquilerAutos;
@@ -31,7 +31,7 @@ public class ModificarClientePanel extends MenuPanel implements ActionListener {
 
 	private JButton guardarButton;
 
-	public ModificarClientePanel(AlquilerAutos sistema, Gui gui) {
+	public ModificarClientePanel(AlquilerAutos sistema, GuiEmpleado gui) {
 		super(sistema, gui);
 		this.init();
 	}
