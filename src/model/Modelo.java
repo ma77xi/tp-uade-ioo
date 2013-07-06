@@ -168,4 +168,8 @@ public class Modelo {
 		this.automoviles.remove(a);
 	}
 
+	public boolean tenesAutos() {
+		return (this.automoviles != null && this.automoviles.size() != 0);
+	}
+
 }

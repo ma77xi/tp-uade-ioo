@@ -309,25 +309,27 @@ public class AlquilerAutos {
 
 	// --- Administración de reservas --- INICIO
 
-	public int registrarReserva(int nroCliente, int nroModelo, String patente, Date fechaInicio, Date fechaFin,
-			float multaCancelacion) {
+	public RespuestaTransaccion registrarReserva(int nroCliente, int nroModelo, String patente, Date fechaInicio,
+			Date fechaFin, float multaCancelacion) {
 
 		Cliente c = this.buscarCliente(nroCliente);
 		if (c == null)
-			return RespuestaSistema.CLIENTE_INEXISTENTE.getKey();
+			return new RespuestaTransaccion(RespuestaSistema.CLIENTE_INEXISTENTE);
 
 		Modelo m = this.buscarModelo(nroModelo);
 		if (m == null)
-			return RespuestaSistema.MODELO_INEXISTENTE.getKey();
+			return new RespuestaTransaccion(RespuestaSistema.MODELO_INEXISTENTE);
 
-		Automovil a = m.buscarAutomovil(patente);
-		if (a == null)
-			return RespuestaSistema.AUTOMOVIL_INEXISTENTE.getKey();
+		// Automovil a = m.buscarAutomovil(patente);
+		// if (a == null)
+		// return RespuestaSistema.AUTOMOVIL_INEXISTENTE.getKey();
 
-		Reserva r = new Reserva(a, c, fechaFin, fechaInicio, multaCancelacion);
+		// Reserva r = new Reserva(a, c, fechaFin, fechaInicio,
+		// multaCancelacion);
+		Reserva r = new Reserva(null, c, fechaFin, fechaInicio, multaCancelacion);
 		this.reservas.add(r);
 
-		return RespuestaSistema.OK.getKey();
+		return new RespuestaTransaccion(RespuestaSistema.OK, String.valueOf(r.getNumeroReserva()));
 	}
 
 	public float cancelarReserva(int nroReserva) {
@@ -423,6 +425,17 @@ public class AlquilerAutos {
 		return lista.toArray(new ElementoCombo[lista.size()]);
 	}
 
+	public ElementoCombo[] listaModelosConAutos() {
+		List<ElementoCombo> lista = new ArrayList<ElementoCombo>();
+		for (Modelo modelo : this.modelos) {
+			if (modelo.tenesAutos()) {
+				lista.add(new ElementoCombo(String.valueOf(modelo.getNumeroModelo()), modelo.getMarca() + " - "
+						+ modelo.getModelo()));
+			}
+		}
+		return lista.toArray(new ElementoCombo[lista.size()]);
+	}
+
 	// --- Login ---
 	public RespuestaTransaccion login(String user, String password) {
 
@@ -440,4 +453,16 @@ public class AlquilerAutos {
 		return new RespuestaTransaccion(RespuestaSistema.USUARIO_CONTRASEÑA_INVALIDO);
 
 	}
+
+	public ClienteView buscarClienteView(String user) {
+
+		Cliente c = this.buscarCliente(user);
+
+		if (c == null) {
+			return null;
+		} else {
+			return new ClienteView(c);
+		}
+	}
+
 }
