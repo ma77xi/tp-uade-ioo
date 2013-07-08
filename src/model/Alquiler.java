@@ -178,4 +178,9 @@ public class Alquiler {
 		return this.cliente.sosCliente(nroCliente);
 	}
 
+	public boolean haySolapamiento(Date fechaDesde, Date fechaHasta) {
+		Date fechaFinal = (null != this.fechaDevolucion) ? this.fechaDevolucion : this.fechaFin;
+		return this.fechaInicio.compareTo(fechaHasta) <= 0 && fechaFinal.compareTo(fechaDesde) >= 0;
+	}
+
 }

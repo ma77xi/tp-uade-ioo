@@ -87,6 +87,9 @@ public class Reserva {
 	public boolean tenesCliente(int nroCliente) {
 		return this.cliente.sosCliente(nroCliente);
 	}
-	
+
+	public boolean haySolapamiento(Date fechaDesde, Date fechaHasta) {
+		return this.fechaInicio.compareTo(fechaHasta) <= 0 && this.fechaFin.compareTo(fechaDesde) >= 0;
+	}
 	
 }

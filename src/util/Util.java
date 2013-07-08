@@ -33,6 +33,12 @@ public class Util {
 	public static void mostrarError(Component parent, String mensaje) {
 		JOptionPane.showMessageDialog(parent, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
 	}
+	
+	public static void mostrarError(Component parent, RespuestaGui respuesta) {
+		ErrorGui error = respuesta.getTipoRespuesta();
+		String mensaje = error.equals(ErrorGui.ERROR_TRANSACCION) ? respuesta.getMensaje() : error.getDescripcion(); 
+		JOptionPane.showMessageDialog(parent, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+	}
 
 	public static boolean numeroValido(String numero) {
 		try {

@@ -3,11 +3,14 @@ package view.swing.reserva;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.text.ParseException;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -24,7 +27,7 @@ import util.Util;
 import view.vistas.ClienteView;
 import controller.AlquilerAutos;
 
-public class DatosReservaPanel extends JPanel implements FocusListener {
+public class DatosReservaPanel extends JPanel implements FocusListener, ActionListener {
 
 	private static final long serialVersionUID = -2183603889250268077L;
 
@@ -37,6 +40,7 @@ public class DatosReservaPanel extends JPanel implements FocusListener {
 	private JTextField dni;
 	private JTextField fechaInicio;
 	private JTextField fechaFin;
+	private JButton disponibilidadButton;
 	private JComboBox<ElementoCombo> modelos;
 	private JComboBox<ElementoCombo> autos;
 
@@ -46,6 +50,9 @@ public class DatosReservaPanel extends JPanel implements FocusListener {
 	private JLabel fechaFinLabel;
 	private JLabel modelosLabel;
 	private JLabel autosLabel;
+
+	private String oldFechaInicio;
+	private String oldFechaFin;
 
 	public DatosReservaPanel(AlquilerAutos sistema, ClienteView clienteView) {
 		this.sistema = sistema;
@@ -77,7 +84,7 @@ public class DatosReservaPanel extends JPanel implements FocusListener {
 
 		gBC.gridx = 1;
 		this.cliente = new JTextField(15);
-		this.cliente.setEnabled(false);
+		this.cliente.setEditable(false);
 		this.cliente.setText(this.clienteView.getNombre() + " " + this.clienteView.getApellido());
 		this.innerPanel.add(this.cliente, gBC);
 
@@ -87,7 +94,7 @@ public class DatosReservaPanel extends JPanel implements FocusListener {
 
 		gBC.gridx = 3;
 		this.dni = new JTextField(15);
-		this.dni.setEnabled(false);
+		this.dni.setEditable(false);
 		this.dni.setText(this.clienteView.getDni().toString());
 		this.innerPanel.add(this.dni, gBC);
 
@@ -132,23 +139,41 @@ public class DatosReservaPanel extends JPanel implements FocusListener {
 		gBC.gridy = y;
 
 		gBC.gridx = 0;
+		gBC.gridwidth = 2;
+		this.disponibilidadButton = new JButton("Consultar Disponibilidad");
+		this.disponibilidadButton.addActionListener(this);
+		this.disponibilidadButton.setEnabled(false);
+		this.innerPanel.add(this.disponibilidadButton, gBC);
+
+		gBC.gridx = 2;
+		gBC.gridwidth = 1;
 		this.modelosLabel = new JLabel("Modelos:");
 		this.innerPanel.add(this.modelosLabel, gBC);
 
-		gBC.gridx = 1;
-		this.modelos = new JComboBox<ElementoCombo>(sistema.listaModelosConAutos());
+		gBC.gridx = 3;
+		this.modelos = new JComboBox<ElementoCombo>();
+		this.modelos.setEnabled(false);
 		this.innerPanel.add(this.modelos, gBC);
 
 	}
 
 	private boolean todosCamposValidos() {
-		return Util.fechaValida(this.fechaInicio.getText()) && Util.fechaValida(this.fechaFin.getText());
+		return Util.fechaValida(this.fechaInicio.getText()) && Util.fechaValida(this.fechaFin.getText())
+				&& this.modelos.getSelectedItem() != null;
 	}
 
+	private boolean fechaInicioAnterioFechaFin() {
+		return Util.parseFecha(this.fechaInicio.getText()).before(Util.parseFecha(this.fechaFin.getText()));
+	}
+
+	// Focus Listener
 	@Override
 	public void focusGained(FocusEvent fe) {
-		// TODO Auto-generated method stub
-
+		if (fe.getSource() == this.fechaInicio) {
+			this.oldFechaInicio = this.fechaInicio.getText();
+		} else if (fe.getSource() == this.fechaFin) {
+			this.oldFechaFin = this.fechaFin.getText();
+		}
 	}
 
 	@Override
@@ -156,37 +181,51 @@ public class DatosReservaPanel extends JPanel implements FocusListener {
 		if (fe.getSource() == this.fechaInicio) {
 			if (!Util.fechaValida(this.fechaInicio.getText())) {
 				Util.mostrarError(this, "Fecha Desde inválida");
+			} else if (!this.fechaInicio.getText().equals(this.oldFechaInicio)) {
+				this.limpiaModelos();
+				if (Util.fechaValida(this.fechaFin.getText())) {
+					this.disponibilidadButton.setEnabled(true);
+				}
 			}
 		} else if (fe.getSource() == this.fechaFin) {
 			if (!Util.fechaValida(this.fechaFin.getText())) {
 				Util.mostrarError(this, "Fecha Fin inválida");
+			} else if (!this.fechaFin.getText().equals(this.oldFechaFin)) {
+				this.limpiaModelos();
+				if (Util.fechaValida(this.fechaInicio.getText())) {
+					this.disponibilidadButton.setEnabled(true);
+				}
 			}
+		}
+	}
+
+	// Action Listener
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		this.modelos.removeAllItems();
+		ElementoCombo[] listaModelos = sistema.listarModelosConDisponibilidad(
+				Util.parseFecha(this.fechaInicio.getText()), Util.parseFecha(this.fechaFin.getText()));
+		this.modelos.setEnabled(true);
+		for (ElementoCombo elementoCombo : listaModelos) {
+			this.modelos.addItem(elementoCombo);
 		}
 
 	}
 
-	// public void enableAllComponents(boolean enable) {
-	// for (Component component : this.innerPanel.getComponents()) {
-	// if (component == this.sexoPanel) {
-	// for (Component innerComponent : this.sexoPanel.getComponents()) {
-	// innerComponent.setEnabled(enable);
-	// }
-	// } else {
-	// component.setEnabled(enable);
-	// }
-	// }
-	// }
-
 	public RespuestaGui generarReserva() {
 		if (this.todosCamposValidos()) {
-			ElementoCombo opcionSeleccionada = (ElementoCombo) this.modelos.getSelectedItem();
-			RespuestaTransaccion respuesta = this.sistema.registrarReserva(this.clienteView.getNumeroCliente(),
-					Integer.parseInt(opcionSeleccionada.getCodigo()), "", Util.parseFecha(this.fechaInicio.getText()),
-					Util.parseFecha(this.fechaFin.getText()), 50f);
-			if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
-				return new RespuestaGui(ErrorGui.OK, respuesta.getMensaje());
+			if (this.fechaInicioAnterioFechaFin()) {
+				ElementoCombo opcionSeleccionada = (ElementoCombo) this.modelos.getSelectedItem();
+				RespuestaTransaccion respuesta = this.sistema.registrarReserva(this.clienteView.getNumeroCliente(),
+						Integer.parseInt(opcionSeleccionada.getCodigo()), "",
+						Util.parseFecha(this.fechaInicio.getText()), Util.parseFecha(this.fechaFin.getText()), 50f);
+				if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
+					return new RespuestaGui(ErrorGui.OK, respuesta.getMensaje());
+				} else {
+					return new RespuestaGui(ErrorGui.ERROR_TRANSACCION, respuesta.getTipoRespuesta().getDescripcion());
+				}
 			} else {
-				return new RespuestaGui(ErrorGui.ERROR_TRANSACCION, respuesta.getTipoRespuesta().getDescripcion());
+				return new RespuestaGui(ErrorGui.ERROR_RANGO_FECHA);
 			}
 		} else {
 			return new RespuestaGui(ErrorGui.ERROR_VALIDACION);
@@ -213,6 +252,11 @@ public class DatosReservaPanel extends JPanel implements FocusListener {
 		// return new RespuestaGui(ErrorGui.ERROR_VALIDACION);
 		// }
 		return null;
+	}
+
+	private void limpiaModelos() {
+		this.modelos.removeAllItems();
+		this.modelos.setEnabled(false);
 	}
 
 }
