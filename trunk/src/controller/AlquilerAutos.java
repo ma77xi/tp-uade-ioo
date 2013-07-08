@@ -1,8 +1,12 @@
 package controller;
 
+import java.beans.FeatureDescriptor;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import model.Alquiler;
 import model.Automovil;
@@ -319,6 +323,8 @@ public class AlquilerAutos {
 		Modelo m = this.buscarModelo(nroModelo);
 		if (m == null)
 			return new RespuestaTransaccion(RespuestaSistema.MODELO_INEXISTENTE);
+		
+		Automovil a = this.buscarAutomovilDisponible(m, fechaInicio, fechaFin);
 
 		// Automovil a = m.buscarAutomovil(patente);
 		// if (a == null)
@@ -326,10 +332,34 @@ public class AlquilerAutos {
 
 		// Reserva r = new Reserva(a, c, fechaFin, fechaInicio,
 		// multaCancelacion);
-		Reserva r = new Reserva(null, c, fechaFin, fechaInicio, multaCancelacion);
+		Reserva r = new Reserva(a, c, fechaFin, fechaInicio, multaCancelacion);
 		this.reservas.add(r);
 
 		return new RespuestaTransaccion(RespuestaSistema.OK, String.valueOf(r.getNumeroReserva()));
+	}
+
+	// PRE: el modelo tiene un automóvil disponible
+	private Automovil buscarAutomovilDisponible(Modelo m, Date fechaDesde, Date fechaHasta) {
+		
+		List<Automovil> listaAutos = new ArrayList<Automovil>();
+		listaAutos.addAll(m.getAutomoviles());
+
+		// Se quitan aquéllos autos que estén alquilados para esas fechas.
+		for (Alquiler alquiler : this.alquileres) {
+			if (alquiler.haySolapamiento(fechaDesde, fechaHasta)) {
+				listaAutos.remove(alquiler.getAutomovil());
+			}
+		}
+
+		// se quitan aquéllos autos que estén reservados para esas fechas.
+		for (Reserva reserva : this.reservas) {
+			if (reserva.haySolapamiento(fechaDesde, fechaHasta)) {
+				listaAutos.remove(reserva.getAutomovil());
+			}
+		}
+		
+		return listaAutos.get(0);
+		
 	}
 
 	public float cancelarReserva(int nroReserva) {
@@ -434,6 +464,50 @@ public class AlquilerAutos {
 			}
 		}
 		return lista.toArray(new ElementoCombo[lista.size()]);
+	}
+
+	public ElementoCombo[] listarModelosConDisponibilidad(Date fechaDesde, Date fechaHasta) {
+
+		// Se crea un mapa con todos los autos de todos los modelos
+		Map<Modelo, List<Automovil>> mapaModelosAutos = new HashMap<Modelo, List<Automovil>>();
+		for (Modelo modelo : this.modelos) {
+			List<Automovil> autos = new ArrayList<Automovil>();
+			autos.addAll(modelo.getAutomoviles());
+			mapaModelosAutos.put(modelo, autos);
+		}
+
+		// Se quitan aquéllos autos que estén alquilados para esas fechas.
+		for (Alquiler alquiler : this.alquileres) {
+			if (alquiler.haySolapamiento(fechaDesde, fechaHasta)) {
+				this.remueveAutoAMapa(mapaModelosAutos, alquiler.getAutomovil());
+			}
+		}
+
+		// se quitan aquéllos autos que estén reservados para esas fechas.
+		for (Reserva reserva : this.reservas) {
+			if (reserva.haySolapamiento(fechaDesde, fechaHasta)) {
+				this.remueveAutoAMapa(mapaModelosAutos, reserva.getAutomovil());
+			}
+		}
+
+		List<ElementoCombo> lista = new ArrayList<ElementoCombo>();
+		for (Modelo modelo : mapaModelosAutos.keySet()) {
+			if (!mapaModelosAutos.get(modelo).isEmpty()) {
+				lista.add(new ElementoCombo(String.valueOf(modelo.getNumeroModelo()), modelo.getMarca() + " - "
+						+ modelo.getModelo()));
+			}
+		}
+
+		return lista.toArray(new ElementoCombo[lista.size()]);
+	}
+
+	private void remueveAutoAMapa(Map<Modelo, List<Automovil>> mapa, Automovil auto) {
+		for (Modelo modelo : mapa.keySet()) {
+			if (mapa.get(modelo).contains(auto)) {
+				mapa.get(modelo).remove(auto);
+				break;
+			}
+		}
 	}
 
 	// --- Login ---

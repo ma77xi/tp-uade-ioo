@@ -67,7 +67,7 @@ public class AltaReservaPanel extends JPanel implements ActionListener {
 					"Reseva Exitosa", JOptionPane.INFORMATION_MESSAGE);
 			this.gui.reset();
 		} else {
-			Util.mostrarError(this, respuesta.getMensaje());
+			Util.mostrarError(this, respuesta);
 		}
 
 	}
