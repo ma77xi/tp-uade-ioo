@@ -41,6 +41,7 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 	private JMenuItem itemModificarAuto;
 	private JMenu menuReserva;
 	private JMenuItem itemAltaReserva;
+	private JMenuItem itemBajaReserva;
 	private JMenu menuAlquiler;
 	private JMenuItem itemAltaAlquiler;
 	private JMenuItem itemDevolucion;
@@ -49,14 +50,15 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				GuiEmpleado g = new GuiEmpleado();
+				AlquilerAutos sistem = new AlquilerAutos();
+				GuiEmpleado g = new GuiEmpleado(sistem);
 				g.setVisible(true);
 			}
 		});
 	}
 
-	public GuiEmpleado() {
-		sistema = new AlquilerAutos();
+	public GuiEmpleado(AlquilerAutos sistem) {
+		sistema = sistem;
 		init();
 	}
 
@@ -114,6 +116,10 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 		this.itemAltaReserva = new JMenuItem("Alta Reserva");
 		this.itemAltaReserva.addActionListener(this);
 		this.menuReserva.add(itemAltaReserva);
+		
+		this.itemBajaReserva = new JMenuItem("Baja Reserva");
+		this.itemBajaReserva.addActionListener(this);
+		this.menuReserva.add(itemBajaReserva);
 		// Menú Reservas - FIN
 
 		// Menú Alquileres - INICIO
