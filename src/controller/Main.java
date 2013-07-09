@@ -8,17 +8,30 @@ import java.util.Map;
 
 import util.ElementoCombo;
 import util.Util;
+import view.GuiClienteWeb;
+import view.GuiEmpleado;
+import view.swing.MenuPanel;
 
 
 public class Main {
 	
-	public final static Date fechaDesde = Util.parseFecha("10/10/2013");
-	public final static Date fechaHasta = Util.parseFecha("20/10/2013");
+//	public final static Date fechaDesde = Util.parseFecha("10/10/2013");
+//	public final static Date fechaHasta = Util.parseFecha("20/10/2013");
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
+	
+		AlquilerAutos sistema = new AlquilerAutos();
+		GuiEmpleado gui = new GuiEmpleado(sistema);
+		gui.setVisible(true);
+		
+		GuiClienteWeb guiEw = new GuiClienteWeb(sistema);
+		guiEw.setVisible(true);
+		
+	}
 		// TODO Auto-generated method stub
 		
 //		List<ElementoCombo> lista = new ArrayList<ElementoCombo>();
@@ -45,33 +58,33 @@ public class Main {
 //		}
 //		
 //		System.out.println(mapa);
-		
-		Date fecha1 = Util.parseFecha("01/10/2013");
-		Date fecha2 = Util.parseFecha("10/10/2013");
-		Date fecha3 = Util.parseFecha("12/10/2013");
-		Date fecha4 = Util.parseFecha("18/10/2013");
-		Date fecha5 = Util.parseFecha("20/10/2013");
-		Date fecha6 = Util.parseFecha("30/10/2013");
-		
-		System.out.println("false");
-		System.out.println(fecha1 + " " + fecha6 + "    --- " + Main.estasEnRango(fecha1, fecha6));
-		System.out.println(fecha1 + " " + fecha2 + "    --- " + Main.estasEnRango(fecha1, fecha2));
-		System.out.println(fecha1 + " " + fecha3 + "    --- " + Main.estasEnRango(fecha1, fecha3));
-		System.out.println(fecha2 + " " + fecha6 + "    --- " + Main.estasEnRango(fecha2, fecha6));
-		System.out.println(fecha5 + " " + fecha6 + "    --- " + Main.estasEnRango(fecha5, fecha6));
-		
-		System.out.println();
-		System.out.println("true");
-		System.out.println(fecha2 + " " + fecha5 + "    --- " + Main.estasEnRango(fecha2, fecha5));
-		System.out.println(fecha2 + " " + fecha3 + "    --- " + Main.estasEnRango(fecha2, fecha3));
-		System.out.println(fecha3 + " " + fecha4 + "    --- " + Main.estasEnRango(fecha3, fecha4));
-		System.out.println(fecha4 + " " + fecha5 + "    --- " + Main.estasEnRango(fecha4, fecha5));
-		
-	}
-	
-	public static boolean estasEnRango(Date fechaDesde, Date fechaHasta) {
-		return Main.fechaDesde.compareTo(fechaDesde) <= 0 && Main.fechaHasta.compareTo(fechaHasta) >= 0;
-	}
-	
+//		
+//		Date fecha1 = Util.parseFecha("01/10/2013");
+//		Date fecha2 = Util.parseFecha("10/10/2013");
+//		Date fecha3 = Util.parseFecha("12/10/2013");
+//		Date fecha4 = Util.parseFecha("18/10/2013");
+//		Date fecha5 = Util.parseFecha("20/10/2013");
+//		Date fecha6 = Util.parseFecha("30/10/2013");
+//		
+//		System.out.println("false");
+//		System.out.println(fecha1 + " " + fecha6 + "    --- " + Main.estasEnRango(fecha1, fecha6));
+//		System.out.println(fecha1 + " " + fecha2 + "    --- " + Main.estasEnRango(fecha1, fecha2));
+//		System.out.println(fecha1 + " " + fecha3 + "    --- " + Main.estasEnRango(fecha1, fecha3));
+//		System.out.println(fecha2 + " " + fecha6 + "    --- " + Main.estasEnRango(fecha2, fecha6));
+//		System.out.println(fecha5 + " " + fecha6 + "    --- " + Main.estasEnRango(fecha5, fecha6));
+//		
+//		System.out.println();
+//		System.out.println("true");
+//		System.out.println(fecha2 + " " + fecha5 + "    --- " + Main.estasEnRango(fecha2, fecha5));
+//		System.out.println(fecha2 + " " + fecha3 + "    --- " + Main.estasEnRango(fecha2, fecha3));
+//		System.out.println(fecha3 + " " + fecha4 + "    --- " + Main.estasEnRango(fecha3, fecha4));
+//		System.out.println(fecha4 + " " + fecha5 + "    --- " + Main.estasEnRango(fecha4, fecha5));
+//		
+//	}
+//	
+//	public static boolean estasEnRango(Date fechaDesde, Date fechaHasta) {
+//		return Main.fechaDesde.compareTo(fechaDesde) <= 0 && Main.fechaHasta.compareTo(fechaHasta) >= 0;
+//	}
+//	
 
 }
