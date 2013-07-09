@@ -63,13 +63,13 @@ public class Reserva {
 	}
 
 	public Reserva(Automovil automovil, Cliente cliente, Date fechaFin,
-			Date fechaInicio, float multaCancelacion) {
+			Date fechaInicio) {
 		
 		this.automovil = automovil;
 		this.cliente = cliente;
 		this.fechaFin = fechaFin;
 		this.fechaInicio = fechaInicio;
-		this.multaCancelacion = multaCancelacion;
+		this.multaCancelacion = (automovil.getModelo().getCostoDia() * fechaInicio.compareTo(fechaFin) * 5 / 100);
 		this.numeroReserva = Reserva.obtenerNumeroReserva();
 	}
 
