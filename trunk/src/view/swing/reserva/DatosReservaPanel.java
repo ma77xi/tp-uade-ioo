@@ -25,6 +25,7 @@ import util.RespuestaSistema;
 import util.RespuestaTransaccion;
 import util.Util;
 import view.vistas.ClienteView;
+import view.vistas.ReservaView;
 import controller.AlquilerAutos;
 
 public class DatosReservaPanel extends JPanel implements FocusListener, ActionListener {
@@ -60,6 +61,12 @@ public class DatosReservaPanel extends JPanel implements FocusListener, ActionLi
 		this.init();
 	}
 
+	public DatosReservaPanel(AlquilerAutos sistema) {
+		this.sistema = sistema;
+		this.clienteView = null;
+		this.init();
+	}
+
 	private void init() {
 
 		this.setLayout(new GridBagLayout());
@@ -85,7 +92,9 @@ public class DatosReservaPanel extends JPanel implements FocusListener, ActionLi
 		gBC.gridx = 1;
 		this.cliente = new JTextField(15);
 		this.cliente.setEditable(false);
-		this.cliente.setText(this.clienteView.getNombre() + " " + this.clienteView.getApellido());
+		if (this.clienteView != null) {
+			this.cliente.setText(this.clienteView.getNombre() + " " + this.clienteView.getApellido());
+		}
 		this.innerPanel.add(this.cliente, gBC);
 
 		gBC.gridx = 2;
@@ -95,7 +104,9 @@ public class DatosReservaPanel extends JPanel implements FocusListener, ActionLi
 		gBC.gridx = 3;
 		this.dni = new JTextField(15);
 		this.dni.setEditable(false);
-		this.dni.setText(this.clienteView.getDni().toString());
+		if (this.clienteView != null) {
+			this.dni.setText(this.clienteView.getDni().toString());
+		}
 		this.innerPanel.add(this.dni, gBC);
 
 		y++;
@@ -233,30 +244,34 @@ public class DatosReservaPanel extends JPanel implements FocusListener, ActionLi
 	}
 
 	public RespuestaGui cancelarReserva(Long numeroReserva) {
-		// if (this.todosCamposValidos()) {
-		// String sexoSeleccionado = (this.sexoM.isSelected()) ?
-		// this.sexoM.getText() : this.sexoF.getText();
-		// RespuestaTransaccion respuesta =
-		// sistema.modificarCliente(numeroCliente, this.nombre.getText(),
-		// this.apellido.getText(),
-		// Util.parseFecha(this.fechaNacimiento.getText()), domicilio.getText(),
-		// telefono.getText(), Long.parseLong(dni.getText()), sexoSeleccionado,
-		// nacionalidad.getText());
-		// if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
-		// return new RespuestaGui(ErrorGui.OK, respuesta.getMensaje());
-		// } else {
-		// return new RespuestaGui(ErrorGui.ERROR_TRANSACCION,
-		// respuesta.getTipoRespuesta().getDescripcion());
-		// }
-		// } else {
-		// return new RespuestaGui(ErrorGui.ERROR_VALIDACION);
-		// }
-		return null;
+		RespuestaTransaccion respuesta = sistema.cancelarReserva(numeroReserva.intValue());
+		if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
+			return new RespuestaGui(ErrorGui.OK);
+		} else if (respuesta.getTipoRespuesta().equals(RespuestaSistema.APLICA_MULTA)) {
+			return new RespuestaGui(ErrorGui.MUESTRA_MENSAJE, respuesta.getMensaje());
+		} else {
+			return new RespuestaGui(ErrorGui.ERROR_TRANSACCION, respuesta.getMensaje());
+		}
 	}
 
 	private void limpiaModelos() {
 		this.modelos.removeAllItems();
 		this.modelos.setEnabled(false);
+	}
+
+	public void cargaReserva(ReservaView reservaView) {
+
+		this.cliente.setText(reservaView.getNombre() + " " + reservaView.getApellido());
+		this.dni.setText(reservaView.getDni().toString());
+		this.fechaInicio.setText(reservaView.getFechaInicio());
+		this.fechaInicio.setEditable(false);
+		this.fechaFin.setText(reservaView.getFechaFin());
+		this.fechaFin.setEditable(false);
+		this.disponibilidadButton.setVisible(false);
+		this.modelos.removeAllItems();
+		this.modelos.addItem(new ElementoCombo("", reservaView.getMarca() + " - " + reservaView.getModelo()));
+		this.modelos.setEnabled(false);
+
 	}
 
 }

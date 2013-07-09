@@ -1,12 +1,10 @@
 package controller;
 
-import java.beans.FeatureDescriptor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import model.Alquiler;
 import model.Automovil;
@@ -21,8 +19,11 @@ import util.RespuestaTransaccion;
 import view.vistas.AutoView;
 import view.vistas.ClienteView;
 import view.vistas.ModeloView;
+import view.vistas.ReservaView;
 
 public class AlquilerAutos {
+
+	private static final float MULTA_CANCELACION = 50.0f;
 
 	private List<Cliente> clientes;
 	private List<Modelo> modelos;
@@ -269,6 +270,21 @@ public class AlquilerAutos {
 
 	}
 
+	private Modelo buscarModelo(Automovil auto) {
+
+		Modelo m = null;
+
+		for (Modelo mod : this.modelos) {
+			if (mod.tenesAuto(auto)) {
+				m = mod;
+				break;
+			}
+		}
+
+		return m;
+
+	}
+
 	public ModeloView buscarModeloView(int nroModelo) {
 
 		Modelo m = this.buscarModelo(nroModelo);
@@ -323,7 +339,7 @@ public class AlquilerAutos {
 		Modelo m = this.buscarModelo(nroModelo);
 		if (m == null)
 			return new RespuestaTransaccion(RespuestaSistema.MODELO_INEXISTENTE);
-		
+
 		Automovil a = this.buscarAutomovilDisponible(m, fechaInicio, fechaFin);
 
 		// Automovil a = m.buscarAutomovil(patente);
@@ -332,7 +348,7 @@ public class AlquilerAutos {
 
 		// Reserva r = new Reserva(a, c, fechaFin, fechaInicio,
 		// multaCancelacion);
-		Reserva r = new Reserva(a, c, fechaFin, fechaInicio, multaCancelacion);
+		Reserva r = new Reserva(a, c, fechaFin, fechaInicio, AlquilerAutos.MULTA_CANCELACION);
 		this.reservas.add(r);
 
 		return new RespuestaTransaccion(RespuestaSistema.OK, String.valueOf(r.getNumeroReserva()));
@@ -340,7 +356,7 @@ public class AlquilerAutos {
 
 	// PRE: el modelo tiene un automóvil disponible
 	private Automovil buscarAutomovilDisponible(Modelo m, Date fechaDesde, Date fechaHasta) {
-		
+
 		List<Automovil> listaAutos = new ArrayList<Automovil>();
 		listaAutos.addAll(m.getAutomoviles());
 
@@ -357,16 +373,26 @@ public class AlquilerAutos {
 				listaAutos.remove(reserva.getAutomovil());
 			}
 		}
-		
+
 		return listaAutos.get(0);
-		
+
 	}
 
-	public float cancelarReserva(int nroReserva) {
+	public RespuestaTransaccion cancelarReserva(int nroReserva) {
 
 		Reserva r = this.buscarReserva(nroReserva);
+
+		if (r == null) {
+			return new RespuestaTransaccion(RespuestaSistema.NRO_RESERVA_INEXISTENTE);
+		}
+
 		this.reservas.remove(r);
-		return r.getMultaCancelacion();
+
+		if (r.aplicaMulta(new Date())) {
+			return new RespuestaTransaccion(RespuestaSistema.APLICA_MULTA, String.valueOf(r.getMultaCancelacion()));
+		} else {
+			return new RespuestaTransaccion(RespuestaSistema.OK);
+		}
 
 	}
 
@@ -380,6 +406,18 @@ public class AlquilerAutos {
 
 		return null;
 
+	}
+
+	public ReservaView buscarReservaView(int nroReserva) {
+
+		for (Reserva r : this.reservas) {
+			if (r.sosReserva(nroReserva)) {
+				Modelo m = this.buscarModelo(r.getAutomovil());
+				return new ReservaView(r, m);
+			}
+		}
+
+		return null;
 	}
 
 	// --- Administración de reservas --- FIN

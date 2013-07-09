@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class Reserva {
@@ -90,6 +91,13 @@ public class Reserva {
 
 	public boolean haySolapamiento(Date fechaDesde, Date fechaHasta) {
 		return this.fechaInicio.compareTo(fechaHasta) <= 0 && this.fechaFin.compareTo(fechaDesde) >= 0;
+	}
+
+	public boolean aplicaMulta(Date fechaCancelacion) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(fechaCancelacion); 
+		c.add(Calendar.DATE, 2);
+		return (c.getTime().compareTo(this.fechaInicio) > 0 ); 
 	}
 	
 }

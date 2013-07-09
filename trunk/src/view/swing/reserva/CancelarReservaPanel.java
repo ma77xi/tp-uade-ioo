@@ -1,5 +1,6 @@
 package view.swing.reserva;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -9,30 +10,34 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import util.ErrorGui;
 import util.RespuestaGui;
 import util.Util;
-import view.GuiEmpleado;
-import view.swing.MenuPanel;
-import view.vistas.ClienteView;
+import view.GuiClienteWeb;
+import view.vistas.ReservaView;
 import controller.AlquilerAutos;
 
-public class CancelarReservaPanel extends MenuPanel implements ActionListener {
+public class CancelarReservaPanel extends JPanel implements ActionListener {
 
-	private static final long serialVersionUID = 3962037373678734873L;
+	private static final long serialVersionUID = 1401079430111645826L;
+
+	private GuiClienteWeb gui;
+	private AlquilerAutos sistema;
 
 	private JTextField busqueda;
 	private JLabel busquedaLabel;
 	private JButton buscarButton;
 
-	private DatosReservaPanel datosClientePanel;
+	private DatosReservaPanel datosReservaPanel;
 
-	private JButton guardarButton;
+	private JButton cancelarButton;
 
-	public CancelarReservaPanel(AlquilerAutos sistema, GuiEmpleado gui) {
-		super(sistema, gui);
+	public CancelarReservaPanel(AlquilerAutos sistema, GuiClienteWeb gui) {
+		this.sistema = sistema;
+		this.gui = gui;
 		this.init();
 	}
 
@@ -48,7 +53,7 @@ public class CancelarReservaPanel extends MenuPanel implements ActionListener {
 		gBC.insets = new Insets(2, 2, 2, 2);
 		gBC.anchor = GridBagConstraints.NORTHEAST;
 		gBC.gridx = 0;
-		this.busquedaLabel = new JLabel("Número Cliente:");
+		this.busquedaLabel = new JLabel("Número Reserva:");
 		this.add(busquedaLabel, gBC);
 
 		gBC.gridx = 1;
@@ -65,18 +70,32 @@ public class CancelarReservaPanel extends MenuPanel implements ActionListener {
 		gBC.gridy = y;
 		gBC.gridx = 0;
 		gBC.gridwidth = 4;
-		this.datosClientePanel = new DatosReservaPanel(sistema);
-		this.datosClientePanel.enableAllComponents(false);
-		this.add(this.datosClientePanel, gBC);
+		this.datosReservaPanel = new DatosReservaPanel(sistema);
+		// this.datosReservaPanel.enableAllComponents(false);
+		// TODO : ver habilitación
+		this.add(this.datosReservaPanel, gBC);
 
+		y++;
+
+		gBC.gridy = y;
+		gBC.gridx = 0;
+		gBC.gridwidth = 4;
+		gBC.gridheight = 2;
+		JLabel warning = new JLabel(
+				"<html>Las cancelaciones posteriores a las 48 hs anteriores del inicio de la reserva <br />tendrán una multa.</html>");
+		warning.setForeground(Color.RED);
+		this.add(warning, gBC);
+
+		y++;
 		y++;
 
 		gBC.gridy = y;
 		gBC.gridx = 3;
 		gBC.gridwidth = 1;
-		this.guardarButton = new JButton("Guardar");
-		this.guardarButton.addActionListener(this);
-		this.add(guardarButton, gBC);
+		gBC.gridheight = 1;
+		this.cancelarButton = new JButton("Cancelar");
+		this.cancelarButton.addActionListener(this);
+		this.add(cancelarButton, gBC);
 
 	}
 
@@ -85,26 +104,28 @@ public class CancelarReservaPanel extends MenuPanel implements ActionListener {
 
 		if (event.getSource() == this.buscarButton) {
 			if (Util.numeroValido(this.busqueda.getText())) {
-				ClienteView clienteView = this.sistema.buscarClienteView(Integer.parseInt(this.busqueda.getText()));
-				if (clienteView != null) {
-					this.datosClientePanel.cargaCliente(clienteView);
-					this.datosClientePanel.enableAllComponents(true);
+				ReservaView reservaView = this.sistema.buscarReservaView(Integer.parseInt(this.busqueda.getText()));
+				if (reservaView != null) {
+					this.datosReservaPanel.cargaReserva(reservaView);
+					// this.datosReservaPanel.enableAllComponents(true);
 				} else {
-					Util.mostrarError(this, "No se encontró el cliente número " + this.busqueda.getText());
+					Util.mostrarError(this, "No se encontró la reseva número " + this.busqueda.getText());
 				}
 			} else {
-				Util.mostrarError(this, "Número de cliente inválido");
+				Util.mostrarError(this, "Número de reserva inválido");
 			}
-		} else if (event.getSource() == this.guardarButton) {
-			RespuestaGui respuesta = this.datosClientePanel.modificarCliente(Long.parseLong(this.busqueda.getText()));
+		} else if (event.getSource() == this.cancelarButton) {
+			RespuestaGui respuesta = this.datosReservaPanel.cancelarReserva(Long.parseLong(this.busqueda.getText()));
 			if (respuesta.getTipoRespuesta().equals(ErrorGui.OK)) {
-				int seleccion = JOptionPane.showConfirmDialog(null, "Se actualizó correctamente al cliente"
-						+ "\nDesea modificar otro Cliente?", "Modificación Cliente", JOptionPane.YES_NO_OPTION);
-				if (seleccion == JOptionPane.YES_OPTION) {
-					gui.modificarClienteReset();
-				} else {
-					gui.reset();
-				}
+				JOptionPane.showMessageDialog(this, "Se canceló correctamente la reserva.", "Cancelación Exitosa",
+						JOptionPane.INFORMATION_MESSAGE);
+				this.gui.reset();
+			} else if (respuesta.getTipoRespuesta().equals(ErrorGui.MUESTRA_MENSAJE)) {
+				JOptionPane.showMessageDialog(
+						this,
+						"Se canceló correctamente la reserva pero deberá \nabonar una multa de "
+								+ respuesta.getMensaje(), "Cancelación Exitosa", JOptionPane.INFORMATION_MESSAGE);
+				this.gui.reset();
 			} else {
 				Util.mostrarError(this, respuesta.getMensaje());
 			}
