@@ -13,8 +13,6 @@ import util.ErrorGui;
 import util.RespuestaGui;
 import util.Util;
 import view.GuiClienteWeb;
-import view.GuiEmpleado;
-import view.swing.MenuPanel;
 import controller.AlquilerAutos;
 
 public class AltaReservaPanel extends JPanel implements ActionListener {

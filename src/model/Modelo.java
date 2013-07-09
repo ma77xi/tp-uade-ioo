@@ -172,4 +172,11 @@ public class Modelo {
 		return (this.automoviles != null && this.automoviles.size() != 0);
 	}
 
+	public boolean tenesAuto(Automovil auto) {
+		if (this.automoviles != null) {
+			return this.automoviles.contains(auto);
+		}
+		return false;
+	}
+
 }

@@ -16,6 +16,7 @@ import view.swing.auto.ModificarModeloPanel;
 import view.swing.clienteweb.AltaClienteWebPanel;
 import view.swing.login.Login;
 import view.swing.reserva.AltaReservaPanel;
+import view.swing.reserva.CancelarReservaPanel;
 import controller.AlquilerAutos;
 
 public class GuiClienteWeb extends JFrame implements ActionListener, MenuListener {
@@ -122,8 +123,7 @@ public class GuiClienteWeb extends JFrame implements ActionListener, MenuListene
 			getContentPane().add(new AltaReservaPanel(sistema, this, this.user));
 		} else if (event.getSource() == this.itemBajaReserva) {
 			getContentPane().removeAll();
-			// getContentPane().add(new ModificarClientePanel(this.sistema,
-			// this));
+			getContentPane().add(new CancelarReservaPanel(this.sistema, this));
 		}
 
 		getContentPane().revalidate();
