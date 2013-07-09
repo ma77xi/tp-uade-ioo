@@ -229,7 +229,7 @@ public class DatosReservaPanel extends JPanel implements FocusListener, ActionLi
 				ElementoCombo opcionSeleccionada = (ElementoCombo) this.modelos.getSelectedItem();
 				RespuestaTransaccion respuesta = this.sistema.registrarReserva(this.clienteView.getNumeroCliente(),
 						Integer.parseInt(opcionSeleccionada.getCodigo()), "",
-						Util.parseFecha(this.fechaInicio.getText()), Util.parseFecha(this.fechaFin.getText()), 50f);
+						Util.parseFecha(this.fechaInicio.getText()), Util.parseFecha(this.fechaFin.getText()));
 				if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
 					return new RespuestaGui(ErrorGui.OK, respuesta.getMensaje());
 				} else {
