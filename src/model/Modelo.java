@@ -111,7 +111,7 @@ public class Modelo {
 
 	public void agregarAutomovil(int anio, float combustible, long kilometraje, String patente) {
 
-		Automovil nuevoAutomovil = new Automovil(anio, combustible, true, kilometraje, patente);
+		Automovil nuevoAutomovil = new Automovil(anio, combustible, true, kilometraje, patente, this);
 		this.automoviles.add(nuevoAutomovil);
 
 	}
