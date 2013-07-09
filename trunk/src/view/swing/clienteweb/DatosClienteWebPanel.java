@@ -311,7 +311,7 @@ public class DatosClienteWebPanel extends JPanel implements FocusListener {
 				String sexoSeleccionado = (this.sexoM.isSelected()) ? this.sexoM.getText() : this.sexoF.getText();
 				RespuestaTransaccion respuesta = sistema.altaClienteWeb(this.nombre.getText(), this.apellido.getText(),
 						Util.parseFecha(this.fechaNacimiento.getText()), domicilio.getText(), telefono.getText(),
-						Long.parseLong(dni.getText()), sexoSeleccionado, nacionalidad.getText(), this.password.getText(), password);
+						Long.parseLong(dni.getText()), sexoSeleccionado, nacionalidad.getText(), this.user.getText(), password);
 				if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
 					return new RespuestaGui(ErrorGui.OK, respuesta.getMensaje());
 				} else {
