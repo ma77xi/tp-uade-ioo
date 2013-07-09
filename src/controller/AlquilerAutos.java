@@ -23,7 +23,6 @@ import view.vistas.ReservaView;
 
 public class AlquilerAutos {
 
-	private static final float MULTA_CANCELACION = 50.0f;
 
 	private List<Cliente> clientes;
 	private List<Modelo> modelos;
@@ -209,7 +208,6 @@ public class AlquilerAutos {
 			float combustible) {
 
 		Modelo m = this.buscarModelo(nroModelo);
-		// TODO : cambiar la creación de automóvil, que no dependa de modelo.
 		if (m != null) {
 			m.agregarAutomovil(anio, combustible, kilometraje, patente);
 			return new RespuestaTransaccion(RespuestaSistema.OK, String.valueOf(m.getNumeroModelo()));
@@ -223,8 +221,6 @@ public class AlquilerAutos {
 			float combustible, String nuevaPatente) {
 
 		Modelo m = this.buscarModelo(nroModelo);
-		// TODO : cambiar la modificación de automóvil, que no dependa de
-		// modelo.
 		if (m != null) {
 			int errorSistema = m.actualizarAutomovil(patente, anio, kilometraje, combustible, nuevaPatente);
 			return new RespuestaTransaccion(RespuestaSistema.fromCode(errorSistema));
@@ -247,7 +243,11 @@ public class AlquilerAutos {
 				}
 			}
 
-			m.quitarAutomovil(a);
+			m.quitarAutomovil(a); 
+			//TODO:No se si esto deberia quedar o no, para eliminar el modelo cuando se queda sin autos
+			if(!m.tenesAutos()){
+				this.modelos.remove(m);
+			}
 			return RespuestaSistema.OK.getKey();
 		}
 
@@ -330,7 +330,7 @@ public class AlquilerAutos {
 	// --- Administración de reservas --- INICIO
 
 	public RespuestaTransaccion registrarReserva(int nroCliente, int nroModelo, String patente, Date fechaInicio,
-			Date fechaFin, float multaCancelacion) {
+			Date fechaFin) {
 
 		Cliente c = this.buscarCliente(nroCliente);
 		if (c == null)
@@ -342,13 +342,7 @@ public class AlquilerAutos {
 
 		Automovil a = this.buscarAutomovilDisponible(m, fechaInicio, fechaFin);
 
-		// Automovil a = m.buscarAutomovil(patente);
-		// if (a == null)
-		// return RespuestaSistema.AUTOMOVIL_INEXISTENTE.getKey();
-
-		// Reserva r = new Reserva(a, c, fechaFin, fechaInicio,
-		// multaCancelacion);
-		Reserva r = new Reserva(a, c, fechaFin, fechaInicio, AlquilerAutos.MULTA_CANCELACION);
+		Reserva r = new Reserva(a, c, fechaFin, fechaInicio);
 		this.reservas.add(r);
 
 		return new RespuestaTransaccion(RespuestaSistema.OK, String.valueOf(r.getNumeroReserva()));
