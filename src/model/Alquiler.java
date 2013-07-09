@@ -1,6 +1,8 @@
 package model;
 
+
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class Alquiler {
 
@@ -165,9 +167,25 @@ public class Alquiler {
 	}
 
 	public void facturar() {
-		// TODO : hacer cuentas de monto
-		// TODO: obtener fecha del dìa
-		Factura f = new Factura("detalle", null, this.cliente, 0f);
+		
+		Date fechaActual = new GregorianCalendar().getTime();
+		
+		// Le doy que son 100 km por dia, mas de eso es exedente
+		
+		float kmExtra = (this.kilometrajeRecorrido - Float.intBitsToFloat(fechaInicio.compareTo(fechaFin) * 100))
+				* this.automovil.getModelo().getCostoKmExcedente();	
+		
+		float costoDia = this.automovil.getModelo().getCostoDia()
+				* Float.intBitsToFloat(fechaInicio.compareTo(fechaFin));
+		
+		
+		float monto = this.cargosExtra + kmExtra + costoDia;
+
+		String detalles = "Costos: /n" + "Cargos Extra: " + String.valueOf(this.cargosExtra) + "/n"
+				+ "Kilometraje Extra: " + String.valueOf(kmExtra) + "/n" + "Cargos por dia: "
+				+ String.valueOf(costoDia) + "/n";
+	
+		Factura f = new Factura(detalles, fechaActual, this.cliente, monto);
 		this.automovil.registrarDevolucion(this.kilometrajeRecorrido,
 				this.cantidadCombustible);
 		this.factura = f;
