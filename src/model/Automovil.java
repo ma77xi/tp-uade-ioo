@@ -7,6 +7,7 @@ public class Automovil {
 	private long kilometraje;
 	private float combustible;
 	private Boolean disponible;
+	private Modelo miModelo;
 
 	public String getPatente() {
 		return patente;
@@ -35,6 +36,11 @@ public class Automovil {
 	public float getCombustible() {
 		return combustible;
 	}
+	
+	public Modelo getModelo() {
+		return miModelo;
+	}
+
 
 	public void setCombustible(float combustible) {
 		this.combustible = combustible;
@@ -49,13 +55,15 @@ public class Automovil {
 	}
 
 	public Automovil(int anio, float combustible, Boolean disponible,
-			long kilometraje, String patente) {
+			long kilometraje, String patente, Modelo modelo) {
 
 		this.anio = anio;
 		this.combustible = combustible;
 		this.disponible = disponible;
 		this.kilometraje = kilometraje;
 		this.patente = patente;
+		this.miModelo = modelo;
+		
 	}
 
 	public boolean sosAutomovil(String patente) {
