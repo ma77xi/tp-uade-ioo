@@ -59,9 +59,9 @@ public class AltaModeloPanel extends MenuPanel implements ActionListener {
 					+ respuesta.getMensaje() + "\nDesea dar de alta otro Modelo?", "Alta Modelo",
 					JOptionPane.YES_NO_OPTION);
 			if (seleccion == JOptionPane.YES_OPTION) {
-				gui.altaModeloReset();
+				guiEmpleado.altaModeloReset();
 			} else {
-				gui.reset();
+				guiEmpleado.reset();
 			}
 		} else {
 			Util.mostrarError(this, respuesta.getMensaje());

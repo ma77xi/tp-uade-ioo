@@ -285,4 +285,17 @@ public class DatosClientePanel extends JPanel implements FocusListener {
 		}
 	}
 
+	public RespuestaGui eliminarCliente(long numeroCliente) {
+		if (this.todosCamposValidos()) {
+			RespuestaTransaccion respuesta = sistema.bajaCliente(Integer.parseInt(String.valueOf(numeroCliente)));
+			if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
+				return new RespuestaGui(ErrorGui.OK, respuesta.getMensaje());
+			} else {
+				return new RespuestaGui(ErrorGui.ERROR_TRANSACCION, respuesta.getTipoRespuesta().getDescripcion());
+			}
+		} else {
+			return new RespuestaGui(ErrorGui.ERROR_VALIDACION);
+		}
+	}
+
 }

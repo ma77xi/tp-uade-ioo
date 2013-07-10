@@ -101,9 +101,9 @@ public class ModificarClientePanel extends MenuPanel implements ActionListener {
 				int seleccion = JOptionPane.showConfirmDialog(null, "Se actualizó correctamente al cliente"
 						+ "\nDesea modificar otro Cliente?", "Modificación Cliente", JOptionPane.YES_NO_OPTION);
 				if (seleccion == JOptionPane.YES_OPTION) {
-					gui.modificarClienteReset();
+					guiEmpleado.modificarClienteReset();
 				} else {
-					gui.reset();
+					guiEmpleado.reset();
 				}
 			} else {
 				Util.mostrarError(this, respuesta.getMensaje());

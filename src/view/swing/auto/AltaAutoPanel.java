@@ -59,9 +59,9 @@ public class AltaAutoPanel extends MenuPanel implements ActionListener {
 					.showConfirmDialog(null, "Se dio de alta satisfactoriamente el auto " + respuesta.getMensaje()
 							+ "\nDesea dar de alta otro Auto?", "Alta Auto", JOptionPane.YES_NO_OPTION);
 			if (seleccion == JOptionPane.YES_OPTION) {
-				gui.altaAutoReset();
+				guiEmpleado.altaAutoReset();
 			} else {
-				gui.reset();
+				guiEmpleado.reset();
 			}
 		} else {
 			Util.mostrarError(this, respuesta.getMensaje());

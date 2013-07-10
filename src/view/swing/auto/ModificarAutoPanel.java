@@ -84,7 +84,7 @@ public class ModificarAutoPanel extends MenuPanel implements ActionListener {
 	public void actionPerformed(ActionEvent event) {
 
 		if (event.getSource() == this.buscarButton) {
-			if (Util.numeroValido(this.busqueda.getText())) {
+			if (this.busqueda.getText().length() == 7) {
 				AutoView autoView = this.sistema.buscarAutoView(this.busqueda.getText());
 				if (autoView != null) {
 					this.datosAutoPanel.cargaAuto(autoView);
@@ -101,9 +101,9 @@ public class ModificarAutoPanel extends MenuPanel implements ActionListener {
 				int seleccion = JOptionPane.showConfirmDialog(null, "Se actualizó correctamente el automóvil."
 						+ "\nDesea modificar otro Automóvil?", "Modificación Automóvil", JOptionPane.YES_NO_OPTION);
 				if (seleccion == JOptionPane.YES_OPTION) {
-					gui.modificarAutoReset();
+					guiEmpleado.modificarAutoReset();
 				} else {
-					gui.reset();
+					guiEmpleado.reset();
 				}
 			} else {
 				Util.mostrarError(this, respuesta.getMensaje());
