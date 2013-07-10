@@ -79,7 +79,7 @@ public class AlquilerConReservaPanel extends JPanel implements ActionListener {
 		gBC.gridx = 3;
 		gBC.gridwidth = 1;
 		gBC.gridheight = 1;
-		this.generarAlquilerButton = new JButton("Cancelar");
+		this.generarAlquilerButton = new JButton("Convertir");
 		this.generarAlquilerButton.addActionListener(this);
 		this.add(generarAlquilerButton, gBC);
 
@@ -102,19 +102,13 @@ public class AlquilerConReservaPanel extends JPanel implements ActionListener {
 		} else if (event.getSource() == this.generarAlquilerButton) {
 			RespuestaGui respuesta = this.datosAlquilerPanel.generarAlquilerConReserva();
 			if (respuesta.getTipoRespuesta().equals(ErrorGui.OK)) {
-				JOptionPane.showMessageDialog(this, "Se canceló correctamente la reserva.", "Cancelación Exitosa",
+				JOptionPane.showMessageDialog(this,
+						"Se generó correctamente el alquiler número " + respuesta.getMensaje(), "Alquiler Exitoso",
 						JOptionPane.INFORMATION_MESSAGE);
 				this.gui.reset();
-			} else if (respuesta.getTipoRespuesta().equals(ErrorGui.MUESTRA_MENSAJE)) {
-				JOptionPane.showMessageDialog(
-						this,
-						"Se canceló correctamente la reserva pero deberá \nabonar una multa de "
-								+ respuesta.getMensaje(), "Cancelación Exitosa", JOptionPane.INFORMATION_MESSAGE);
-				this.gui.reset();
 			} else {
-				Util.mostrarError(this, respuesta.getMensaje());
+				Util.mostrarError(this, respuesta);
 			}
-
 		}
 	}
 

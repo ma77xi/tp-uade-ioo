@@ -100,7 +100,7 @@ public class AltaAlquilerPanel extends JPanel implements ActionListener {
 			RespuestaGui respuesta = this.datosAlquilerPanel.generarAlquiler();
 			if (respuesta.getTipoRespuesta().equals(ErrorGui.OK)) {
 				JOptionPane.showMessageDialog(this,
-						"Se generó correctamente la reserva número " + respuesta.getMensaje(), "Reseva Exitosa",
+						"Se generó correctamente el alquiler número " + respuesta.getMensaje(), "Alquier Exitoso",
 						JOptionPane.INFORMATION_MESSAGE);
 				this.gui.reset();
 			} else {
