@@ -68,7 +68,6 @@ public class DatosClienteWebPanel extends JPanel implements FocusListener {
 	}
 
 	private void init() {
-
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints gBC = new GridBagConstraints();
 
@@ -250,39 +249,47 @@ public class DatosClienteWebPanel extends JPanel implements FocusListener {
 		gBC.gridwidth = 1;
 		this.passwordConfirmation = new JPasswordField(15);
 		this.innerPanel.add(this.passwordConfirmation, gBC);
-
 	}
 
 	private boolean todosCamposValidos() {
-
-		return this.nombre.getText() != "" && this.apellido.getText() != ""
-				&& Util.fechaValida(this.fechaNacimiento.getText()) && this.domicilio.getText() != ""
-				&& null != this.telefono.getValue() && Util.numeroValido(this.dni.getText())
-				&& this.nacionalidad.getText() != "" && this.user.getText() != ""
-				&& this.password.getPassword() != null && this.passwordConfirmation.getPassword() != null;
+		return 
+				this.nombre.getText() != "" && 
+				this.apellido.getText() != "" && 
+				Util.fechaValida(this.fechaNacimiento.getText()) && 
+				this.domicilio.getText() != "" && 
+				null != this.telefono.getValue() && 
+				Util.numeroValido(this.dni.getText()) && 
+				this.nacionalidad.getText() != "" && 
+				this.user.getText() != "" && 
+				this.password.getPassword() != null && 
+				this.passwordConfirmation.getPassword() != null;
 	}
 
 	@Override
 	public void focusGained(FocusEvent fe) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void focusLost(FocusEvent fe) {
-		if (!Util.fechaValida(this.fechaNacimiento.getText())) {
+		if (!Util.fechaValida(this.fechaNacimiento.getText())) 
+		{
 			Util.mostrarError(this, "Fecha inválida");
 		}
-
 	}
 
 	public void enableAllComponents(boolean enable) {
-		for (Component component : this.innerPanel.getComponents()) {
-			if (component == this.sexoPanel) {
-				for (Component innerComponent : this.sexoPanel.getComponents()) {
+		for (Component component : this.innerPanel.getComponents()) 
+		{
+			if (component == this.sexoPanel) 
+			{
+				for (Component innerComponent : this.sexoPanel.getComponents()) 
+				{
 					innerComponent.setEnabled(enable);
 				}
-			} else {
+			} 
+			else 
+			{
 				component.setEnabled(enable);
 			}
 		}
@@ -295,50 +302,87 @@ public class DatosClienteWebPanel extends JPanel implements FocusListener {
 		this.fechaNacimiento.setText(clienteView.getFechaNacimiento());
 		this.telefono.setValue(clienteView.getTelefono());
 		this.dni.setText(clienteView.getDni().toString());
-		if (clienteView.isMasculino()) {
+		if (clienteView.isMasculino()) 
+		{
 			this.sexoM.setSelected(true);
-		} else {
+		} 
+		else 
+		{
 			this.sexoF.setSelected(true);
 		}
 		this.nacionalidad.setText(clienteView.getNacionalidad());
 	}
 
 	public RespuestaGui altaCliente() {
-		if (this.todosCamposValidos()) {
+		if (this.todosCamposValidos()) 
+		{
 			String password = new String(this.password.getPassword());
 			String confrimacionPassword = new String(this.passwordConfirmation.getPassword());
-			if (password.equals(confrimacionPassword)) {
+			
+			if (password.equals(confrimacionPassword)) 
+			{
 				String sexoSeleccionado = (this.sexoM.isSelected()) ? this.sexoM.getText() : this.sexoF.getText();
-				RespuestaTransaccion respuesta = sistema.altaClienteWeb(this.nombre.getText(), this.apellido.getText(),
-						Util.parseFecha(this.fechaNacimiento.getText()), domicilio.getText(), telefono.getText(),
-						Long.parseLong(dni.getText()), sexoSeleccionado, nacionalidad.getText(), this.user.getText(), password);
-				if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
+				RespuestaTransaccion respuesta = 
+						sistema.altaClienteWeb(
+								this.nombre.getText(), 
+								this.apellido.getText(),
+								Util.parseFecha(this.fechaNacimiento.getText()), 
+								this.domicilio.getText(),
+								this.telefono.getText(),
+								Long.parseLong(dni.getText()), 
+								sexoSeleccionado,
+								this.nacionalidad.getText(), 
+								this.user.getText(),
+								password);
+				if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) 
+				{
 					return new RespuestaGui(ErrorGui.OK, respuesta.getMensaje());
-				} else {
+				} 
+				else 
+				{
 					return new RespuestaGui(ErrorGui.ERROR_TRANSACCION, respuesta.getTipoRespuesta().getDescripcion());
 				}
-			} else {
+			} 
+			else 
+			{
 				return new RespuestaGui(ErrorGui.ERROR_PASSWORD, ErrorGui.ERROR_PASSWORD.getDescripcion());
 			}
-		} else {
+		} 
+		else 
+		{
 			return new RespuestaGui(ErrorGui.ERROR_VALIDACION, ErrorGui.ERROR_VALIDACION.getDescripcion());
 		}
 	}
 
-	public RespuestaGui modificarCliente(Long numeroCliente) {
-		if (this.todosCamposValidos()) {
+	public RespuestaGui modificarCliente() {
+		if (this.todosCamposValidos()) 
+		{
 			String sexoSeleccionado = (this.sexoM.isSelected()) ? this.sexoM.getText() : this.sexoF.getText();
-			RespuestaTransaccion respuesta = sistema.modificarCliente(numeroCliente, this.nombre.getText(),
-					this.apellido.getText(), Util.parseFecha(this.fechaNacimiento.getText()), domicilio.getText(),
-					telefono.getText(), Long.parseLong(dni.getText()), sexoSeleccionado, nacionalidad.getText());
-			if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
+			
+			RespuestaTransaccion respuesta = 
+					sistema.modificarClienteWeb(
+							this.nombre.getText(),
+							this.apellido.getText(), 
+							Util.parseFecha(this.fechaNacimiento.getText()), 
+							this.domicilio.getText(),
+							this.telefono.getText(),
+							Long.parseLong(dni.getText()), 
+							sexoSeleccionado,
+							this.nacionalidad.getText(),
+							this.user.getText(),
+							this.password.toString());
+			if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK))
+			{
 				return new RespuestaGui(ErrorGui.OK, respuesta.getMensaje());
-			} else {
+			} 
+			else 
+			{
 				return new RespuestaGui(ErrorGui.ERROR_TRANSACCION, respuesta.getTipoRespuesta().getDescripcion());
 			}
-		} else {
+		} 
+		else 
+		{
 			return new RespuestaGui(ErrorGui.ERROR_VALIDACION, ErrorGui.ERROR_VALIDACION.getDescripcion());
 		}
 	}
-
 }
