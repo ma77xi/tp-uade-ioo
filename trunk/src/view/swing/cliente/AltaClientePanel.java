@@ -59,9 +59,9 @@ public class AltaClientePanel extends MenuPanel implements ActionListener {
 					"Se dio de alta al cliente Nro " + respuesta.getMensaje() + "\nDesea dar de alta otro Cliente?",
 					"Alta Cliente", JOptionPane.YES_NO_OPTION);
 			if (seleccion == JOptionPane.YES_OPTION) {
-				gui.altaClienteReset();
+				guiEmpleado.altaClienteReset();
 			} else {
-				gui.reset();
+				guiEmpleado.reset();
 			}
 		} else {
 			Util.mostrarError(this, respuesta.getMensaje());

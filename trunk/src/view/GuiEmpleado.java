@@ -19,6 +19,7 @@ import view.swing.auto.AltaModeloPanel;
 import view.swing.auto.ModificarAutoPanel;
 import view.swing.auto.ModificarModeloPanel;
 import view.swing.cliente.AltaClientePanel;
+import view.swing.cliente.BajaClientePanel;
 import view.swing.cliente.ModificarClientePanel;
 import controller.AlquilerAutos;
 
@@ -50,15 +51,15 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 	private JMenuItem itemDevolucion;
 	private JMenu menuSalir;
 
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				AlquilerAutos sistem = new AlquilerAutos();
-				GuiEmpleado g = new GuiEmpleado(sistem);
-				g.setVisible(true);
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		SwingUtilities.invokeLater(new Runnable() {
+//			public void run() {
+//				AlquilerAutos sistem = new AlquilerAutos();
+//				GuiEmpleado g = new GuiEmpleado(sistem);
+//				g.setVisible(true);
+//			}
+//		});
+//	}
 
 	public GuiEmpleado(AlquilerAutos sistem) {
 		this.sistema = sistem;
@@ -162,6 +163,11 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 			getContentPane().removeAll();
 			getContentPane().add(new AltaClientePanel(this.sistema, this));
 		} 
+		else if (event.getSource() == this.itemBajaCliente) 
+		{
+			getContentPane().removeAll();
+			getContentPane().add(new BajaClientePanel(this.sistema, this));
+		}
 		else if (event.getSource() == this.itemModificacionCliente) 
 		{
 			getContentPane().removeAll();
@@ -267,5 +273,13 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 		getContentPane().add(new ModificarAutoPanel(this.sistema, this));
 		getContentPane().revalidate();
 		getContentPane().repaint();
+	}
+
+	public void eliminarClienteReset() {
+		getContentPane().removeAll();
+		getContentPane().add(new BajaClientePanel (this.sistema, this));
+		getContentPane().revalidate();
+		getContentPane().repaint();
+		
 	}
 }
