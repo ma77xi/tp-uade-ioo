@@ -5,11 +5,9 @@ import util.Util;
 import view.GuiClienteWeb;
 import view.GuiEmpleado;
 
-
 public class Main {
 	
-	public static void main(String[] args) {
-		
+	public static void main(String[] args) {		
 	
 		AlquilerAutos sistema = new AlquilerAutos();
 		
@@ -34,15 +32,12 @@ public class Main {
 		// Precarga de clientes
 		sistema.altaClienteWeb("Intro", "O.O.", Util.parseFecha("01/03/2013"), "Lima 717", "(011)4555-9112",
 				12345678L, "M", "Argentina", "ioo", "123");
-		
+		sistema.altaClienteWeb("1", "1", null, "1", "1", 11111L, "1", "1", "1", "1");
 		
 		GuiEmpleado gui = new GuiEmpleado(sistema);
 		gui.setVisible(true);
 		
 		GuiClienteWeb guiEw = new GuiClienteWeb(sistema);
-		guiEw.setVisible(true);
-		
+		guiEw.setVisible(true);	
 	}
-
-
 }

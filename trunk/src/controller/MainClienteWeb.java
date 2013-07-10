@@ -36,10 +36,9 @@ public class MainClienteWeb {
 		// Precarga de clientes
 		controller.altaClienteWeb("Intro", "O.O.", Util.parseFecha("01/03/2013"), "Lima 717", "(011)4555-9112",
 				12345678L, "M", "Argentina", "ioo", "123");
+		controller.altaClienteWeb("1", "1", null, "1", "1", 11111L, "1", "1", "1", "1");
 
 		GuiClienteWeb g = new GuiClienteWeb(controller);
 		g.setVisible(true);
-
 	}
-
 }

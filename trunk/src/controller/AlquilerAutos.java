@@ -64,32 +64,33 @@ public class AlquilerAutos {
 
 	public RespuestaTransaccion modificarCliente(Long numeroCliente, String nombre, String apellido,
 			Date fechaNacimiento, String domicilio, String telefono, Long dni, String sexo, String nacionalidad) {
-
 		Cliente c = this.buscarCliente(numeroCliente);
 
-		if (c != null) {
+		if (c != null) 
+		{
 			c.actualizarDatos(nombre, apellido, fechaNacimiento, domicilio, dni, telefono, sexo, nacionalidad);
 			return new RespuestaTransaccion(RespuestaSistema.OK);
-		} else {
+		} 
+		else 
+		{
 			return new RespuestaTransaccion(RespuestaSistema.CLIENTE_INEXISTENTE);
 		}
-
 	}
 
 	public RespuestaTransaccion modificarClienteWeb(String nombre, String apellido, Date fechaNacimiento,
 			String domicilio, String telefono, Long dni, String sexo, String nacionalidad, String usuario,
 			String password) {
-
 		ClienteWeb c = (ClienteWeb) this.buscarCliente(dni);
 
-		if (c != null) {
-			c.actualizarDatos(nombre, apellido, fechaNacimiento, domicilio, dni, telefono, sexo, nacionalidad, usuario,
-					password);
+		if (c != null) 
+		{
+			c.actualizarDatos(nombre, apellido, fechaNacimiento, domicilio, dni, telefono, sexo, nacionalidad, usuario, password);
 			return new RespuestaTransaccion(RespuestaSistema.OK);
-		} else {
+		} 
+		else 
+		{
 			return new RespuestaTransaccion(RespuestaSistema.CLIENTE_INEXISTENTE);
 		}
-
 	}
 
 	public RespuestaTransaccion bajaCliente(int nroCliente) {
@@ -163,15 +164,16 @@ public class AlquilerAutos {
 	}
 
 	public ClienteView buscarClienteView(int nroCliente) {
-
 		Cliente c = this.buscarCliente(nroCliente);
 
-		if (c == null) {
+		if (c == null) 
+		{
 			return null;
-		} else {
+		} 
+		else 
+		{
 			return new ClienteView(c);
 		}
-
 	}
 
 	// --- Administración de clientes --- FIN
@@ -577,12 +579,14 @@ public class AlquilerAutos {
 	}
 
 	public ClienteView buscarClienteView(String user) {
-
 		Cliente c = this.buscarCliente(user);
 
-		if (c == null) {
+		if (c == null) 
+		{
 			return null;
-		} else {
+		} 
+		else 
+		{
 			return new ClienteView(c);
 		}
 	}
