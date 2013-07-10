@@ -119,7 +119,6 @@ public class AlquilerAutos {
 	}
 
 	private Cliente buscarCliente(Long dni) {
-
 		Cliente c = null;
 
 		for (Cliente cliente : this.clientes) {
@@ -133,7 +132,6 @@ public class AlquilerAutos {
 	}
 
 	private Cliente buscarCliente(int nroCliente) {
-
 		Cliente c = null;
 
 		for (Cliente cliente : this.clientes) {
@@ -147,20 +145,23 @@ public class AlquilerAutos {
 	}
 
 	private ClienteWeb buscarCliente(String user) {
-
-		for (int i = 0; i < this.clientes.size(); i++) {
-			try {
+		for (int i = 0; i < this.clientes.size(); i++) 
+		{
+			try 
+			{
 				ClienteWeb c = (ClienteWeb) this.clientes.get(i);
-				if (c.sosCliente(user)) {
+				if (c.sosCliente(user)) 
+				{
 					return c;
 				}
-			} catch (ClassCastException cce) {
+			} 
+			catch (ClassCastException cce) 
+			{
 				// No es cliente web; no me interesa
 			}
 		}
 
 		return null;
-
 	}
 
 	public ClienteView buscarClienteView(int nroCliente) {
