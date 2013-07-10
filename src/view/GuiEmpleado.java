@@ -61,12 +61,11 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 	}
 
 	public GuiEmpleado(AlquilerAutos sistem) {
-		sistema = sistem;
+		this.sistema = sistem;
 		init();
 	}
 
 	public final void init() {
-
 		// Definición del frame
 		setTitle("Alquiler Autos");
 		setResizable(false);
@@ -154,31 +153,42 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 		menuBar.add(menuReserva);
 		menuBar.add(menuAlquiler);
 		menuBar.add(menuSalir);
-
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
-
-		if (event.getSource() == this.itemAltaCliente) {
+		if (event.getSource() == this.itemAltaCliente) 
+		{
 			getContentPane().removeAll();
 			getContentPane().add(new AltaClientePanel(this.sistema, this));
-		} else if (event.getSource() == this.itemModificacionCliente) {
+		} 
+		else if (event.getSource() == this.itemModificacionCliente) 
+		{
 			getContentPane().removeAll();
 			getContentPane().add(new ModificarClientePanel(this.sistema, this));
-		} else if (event.getSource() == this.itemAltaModelo) {
+		} 
+		else if (event.getSource() == this.itemAltaModelo) 
+		{
 			getContentPane().removeAll();
 			getContentPane().add(new AltaModeloPanel(this.sistema, this));
-		} else if (event.getSource() == this.itemModificarModelo) {
+		} 
+		else if (event.getSource() == this.itemModificarModelo) 
+		{
 			getContentPane().removeAll();
 			getContentPane().add(new ModificarModeloPanel(this.sistema, this));
-		} else if (event.getSource() == this.itemAltaAuto) {
+		} 
+		else if (event.getSource() == this.itemAltaAuto) 
+		{
 			getContentPane().removeAll();
 			getContentPane().add(new AltaAutoPanel(this.sistema, this));
-		} else if (event.getSource() == this.itemModificarAuto) {
+		} 
+		else if (event.getSource() == this.itemModificarAuto) 
+		{
 			getContentPane().removeAll();
 			getContentPane().add(new ModificarAutoPanel(this.sistema, this));
-		} else if (event.getSource() == this.itemAltaAlquiler) {
+		} 
+		else if (event.getSource() == this.itemAltaAlquiler) 
+		{
 			getContentPane().removeAll();
 			getContentPane().add(new AltaAlquilerPanel(this.sistema, this));
 		} else if (event.getSource() == this.itemAlquilerConReserva) {
@@ -188,29 +198,27 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 
 		getContentPane().revalidate();
 		getContentPane().repaint();
-
 	}
 
 	@Override
 	public void menuCanceled(MenuEvent e) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void menuDeselected(MenuEvent e) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void menuSelected(MenuEvent e) {
 		int seleccion = JOptionPane.showConfirmDialog(null, "Está seguro que desea salir?", "Advertencia",
 				JOptionPane.YES_NO_OPTION);
-		if (seleccion == JOptionPane.YES_OPTION) {
+		
+		if (seleccion == JOptionPane.YES_OPTION) 
+		{
 			System.exit(0);
 		}
-
 	}
 
 	public void altaClienteReset() {
@@ -260,5 +268,4 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 		getContentPane().revalidate();
 		getContentPane().repaint();
 	}
-
 }
