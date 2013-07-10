@@ -9,7 +9,6 @@ public class ClienteWeb extends Cliente {
 
 	public ClienteWeb(String nombre, String apellido, Date fechaNacimiento, String domicilio, String telefono,
 			Long dni, String sexo, String nacionalidad, String usuario, String password) {
-
 		super(nombre, apellido, fechaNacimiento, domicilio, telefono, dni, sexo, nacionalidad);
 		this.usuario = usuario;
 		this.password = password;
@@ -36,7 +35,6 @@ public class ClienteWeb extends Cliente {
 		super.actualizarDatos(nombre, apellido, fechaNacimiento, domicilio, dni, telefono, sexo, nacionalidad);
 		this.usuario = usuario;
 		this.password = password;
-
 	}
 
 	public boolean sosCliente(String user, String password) {
