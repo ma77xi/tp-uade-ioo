@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
+import view.swing.alquiler.AlquilerConReservaPanel;
 import view.swing.alquiler.AltaAlquilerPanel;
 import view.swing.auto.AltaAutoPanel;
 import view.swing.auto.AltaModeloPanel;
@@ -45,6 +46,7 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 	private JMenuItem itemBajaReserva;
 	private JMenu menuAlquiler;
 	private JMenuItem itemAltaAlquiler;
+	private JMenuItem itemAlquilerConReserva;
 	private JMenuItem itemDevolucion;
 	private JMenu menuSalir;
 
@@ -117,7 +119,7 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 		this.itemAltaReserva = new JMenuItem("Alta Reserva");
 		this.itemAltaReserva.addActionListener(this);
 		this.menuReserva.add(itemAltaReserva);
-		
+
 		this.itemBajaReserva = new JMenuItem("Baja Reserva");
 		this.itemBajaReserva.addActionListener(this);
 		this.menuReserva.add(itemBajaReserva);
@@ -126,9 +128,13 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 		// Menú Alquileres - INICIO
 		this.menuAlquiler = new JMenu("Alquileres");
 
-		this.itemAltaAlquiler = new JMenuItem("Registrar Alquiler");
+		this.itemAltaAlquiler = new JMenuItem("Nuevo Alquiler");
 		this.itemAltaAlquiler.addActionListener(this);
 		this.menuAlquiler.add(itemAltaAlquiler);
+
+		this.itemAlquilerConReserva = new JMenuItem("Alquiler con Reserva");
+		this.itemAlquilerConReserva.addActionListener(this);
+		this.menuAlquiler.add(itemAlquilerConReserva);
 
 		this.itemDevolucion = new JMenuItem("Registrar Devolución");
 		this.itemDevolucion.addActionListener(this);
@@ -175,6 +181,9 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 		} else if (event.getSource() == this.itemAltaAlquiler) {
 			getContentPane().removeAll();
 			getContentPane().add(new AltaAlquilerPanel(this.sistema, this));
+		} else if (event.getSource() == this.itemAlquilerConReserva) {
+			getContentPane().removeAll();
+			getContentPane().add(new AlquilerConReservaPanel(this.sistema, this));
 		}
 
 		getContentPane().revalidate();

@@ -444,6 +444,22 @@ public class AlquilerAutos {
 
 	}
 
+	public RespuestaTransaccion registrarAlquiler(int numeroReserva, String descripcionInspeccion,
+			boolean entregaDocumentacion, float porcentajeDescuento) {
+
+		Reserva r = this.buscarReserva(numeroReserva);
+
+		if (r == null) {
+			return new RespuestaTransaccion(RespuestaSistema.NRO_RESERVA_INEXISTENTE);
+		}
+
+		Alquiler al = new Alquiler(r, porcentajeDescuento, descripcionInspeccion, entregaDocumentacion);
+
+		this.alquileres.add(al);
+
+		return new RespuestaTransaccion(RespuestaSistema.OK, String.valueOf(al.getNumeroAlquiler()));
+	}
+
 	public int registrarDevolucionAutomovil(int nroAlquiler, Date fechaDevolucion, float cantidadCombustible,
 			float kilometrosRecorridos, boolean obtuvoDanios, float cargosExtra) {
 

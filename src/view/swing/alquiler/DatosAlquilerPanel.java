@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -48,6 +49,7 @@ public class DatosAlquilerPanel extends JPanel implements FocusListener, ActionL
 	private JButton disponibilidadButton;
 	private JComboBox<ElementoCombo> modelos;
 	private JComboBox<ElementoCombo> autos;
+	private JCheckBox documentacion;
 	private JTextField descuento;
 	private JTextField inspeccion;
 
@@ -57,6 +59,7 @@ public class DatosAlquilerPanel extends JPanel implements FocusListener, ActionL
 	private JLabel fechaFinLabel;
 	private JLabel modelosLabel;
 	private JLabel autosLabel;
+	private JLabel documentacionLabel;
 	private JLabel descuentoLabel;
 	private JLabel inspeccionLabel;
 
@@ -64,12 +67,14 @@ public class DatosAlquilerPanel extends JPanel implements FocusListener, ActionL
 	private String oldFechaFin;
 
 	private int numeroCliente;
+	private int numeroReserva;
 	private Map<ModeloView, List<AutoView>> mapaModelosAutos;
 
 	public DatosAlquilerPanel(AlquilerAutos sistema) {
 		this.sistema = sistema;
 		this.mapaModelosAutos = new HashMap<ModeloView, List<AutoView>>();
 		this.numeroCliente = -1;
+		this.numeroReserva = -1;
 		this.init();
 	}
 
@@ -125,6 +130,7 @@ public class DatosAlquilerPanel extends JPanel implements FocusListener, ActionL
 		this.innerPanel.add(this.fechaInicioLabel, gBC);
 
 		gBC.gridx = 1;
+		gBC.anchor = GridBagConstraints.NORTHWEST;
 		MaskFormatter fechaFormatter = null;
 		try {
 			fechaFormatter = new MaskFormatter("##/##/####");
@@ -140,10 +146,12 @@ public class DatosAlquilerPanel extends JPanel implements FocusListener, ActionL
 		innerPanel.add(fechaInicio, gBC);
 
 		gBC.gridx = 2;
+		gBC.anchor = GridBagConstraints.NORTHEAST;
 		this.fechaFinLabel = new JLabel("Hasta:");
 		this.innerPanel.add(this.fechaFinLabel, gBC);
 
 		gBC.gridx = 3;
+		gBC.anchor = GridBagConstraints.NORTHWEST;
 		if (fechaFormatter != null) {
 			this.fechaFin = new JFormattedTextField(fechaFormatter);
 		} else {
@@ -158,6 +166,7 @@ public class DatosAlquilerPanel extends JPanel implements FocusListener, ActionL
 
 		gBC.gridx = 0;
 		gBC.gridwidth = 2;
+		gBC.anchor = GridBagConstraints.NORTHEAST;
 		this.disponibilidadButton = new JButton("Consultar Disponibilidad");
 		this.disponibilidadButton.addActionListener(this);
 		this.disponibilidadButton.setEnabled(false);
@@ -173,16 +182,19 @@ public class DatosAlquilerPanel extends JPanel implements FocusListener, ActionL
 		this.innerPanel.add(this.modelosLabel, gBC);
 
 		gBC.gridx = 1;
+		gBC.anchor = GridBagConstraints.NORTHWEST;
 		this.modelos = new JComboBox<ElementoCombo>();
 		this.modelos.addActionListener(this);
 		this.modelos.setEnabled(false);
 		this.innerPanel.add(this.modelos, gBC);
 
 		gBC.gridx = 2;
+		gBC.anchor = GridBagConstraints.NORTHEAST;
 		this.autosLabel = new JLabel("Autos:");
 		this.innerPanel.add(this.autosLabel, gBC);
 
 		gBC.gridx = 3;
+		gBC.anchor = GridBagConstraints.NORTHWEST;
 		this.autos = new JComboBox<ElementoCombo>();
 		this.autos.setEnabled(false);
 		this.innerPanel.add(this.autos, gBC);
@@ -191,11 +203,23 @@ public class DatosAlquilerPanel extends JPanel implements FocusListener, ActionL
 
 		gBC.gridy = y;
 
+		gBC.gridx = 0;
+		gBC.anchor = GridBagConstraints.NORTHEAST;
+		this.documentacion = new JCheckBox();
+		this.innerPanel.add(this.documentacion, gBC);
+
 		gBC.gridx = 1;
+		gBC.anchor = GridBagConstraints.NORTHWEST;
+		this.documentacionLabel = new JLabel("Presenta Documentación");
+		this.innerPanel.add(this.documentacionLabel, gBC);
+
+		gBC.gridx = 2;
+		gBC.anchor = GridBagConstraints.NORTHEAST;
 		this.descuentoLabel = new JLabel("Descuento:");
 		this.innerPanel.add(this.descuentoLabel, gBC);
 
-		gBC.gridx = 2;
+		gBC.gridx = 3;
+		gBC.anchor = GridBagConstraints.NORTHWEST;
 		this.descuento = new JTextField(8);
 		this.innerPanel.add(this.descuento, gBC);
 
@@ -287,7 +311,7 @@ public class DatosAlquilerPanel extends JPanel implements FocusListener, ActionL
 		}
 	}
 
-	public RespuestaGui generarReserva() {
+	public RespuestaGui generarAlquiler() {
 		if (this.todosCamposValidos()) {
 			if (this.fechaInicioAnterioFechaFin()) {
 				ElementoCombo modelo = (ElementoCombo) this.modelos.getSelectedItem();
@@ -295,7 +319,7 @@ public class DatosAlquilerPanel extends JPanel implements FocusListener, ActionL
 				RespuestaTransaccion respuesta = this.sistema.registrarAlquiler(this.numeroCliente,
 						Integer.parseInt(modelo.getCodigo()), auto.getCodigo(),
 						Util.parseFecha(this.fechaInicio.getText()), Util.parseFecha(this.fechaFin.getText()),
-						this.inspeccion.getText(), true,
+						this.inspeccion.getText(), this.documentacion.isSelected(),
 						(this.descuento != null) ? Float.parseFloat(this.descuento.getText()) : 0);
 				if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
 					return new RespuestaGui(ErrorGui.OK, respuesta.getMensaje());
@@ -310,16 +334,31 @@ public class DatosAlquilerPanel extends JPanel implements FocusListener, ActionL
 		}
 	}
 
-	public RespuestaGui cancelarReserva(Long numeroReserva) {
-		RespuestaTransaccion respuesta = sistema.cancelarReserva(numeroReserva.intValue());
+	public RespuestaGui generarAlquilerConReserva() {
+		// Los campos obligatorios están precargados; no se valida.
+		RespuestaTransaccion respuesta = this.sistema.registrarAlquiler(this.numeroReserva, this.inspeccion.getText(),
+				this.documentacion.isSelected(), (this.descuento != null) ? Float.parseFloat(this.descuento.getText()) : 0);
 		if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
-			return new RespuestaGui(ErrorGui.OK);
-		} else if (respuesta.getTipoRespuesta().equals(RespuestaSistema.APLICA_MULTA)) {
-			return new RespuestaGui(ErrorGui.MUESTRA_MENSAJE, respuesta.getMensaje());
+			return new RespuestaGui(ErrorGui.OK, respuesta.getMensaje());
 		} else {
-			return new RespuestaGui(ErrorGui.ERROR_TRANSACCION, respuesta.getMensaje());
+			return new RespuestaGui(ErrorGui.ERROR_TRANSACCION, respuesta.getTipoRespuesta().getDescripcion());
 		}
 	}
+
+	// public RespuestaGui cancelarReserva(Long numeroReserva) {
+	// RespuestaTransaccion respuesta =
+	// sistema.cancelarReserva(numeroReserva.intValue());
+	// if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
+	// return new RespuestaGui(ErrorGui.OK);
+	// } else if
+	// (respuesta.getTipoRespuesta().equals(RespuestaSistema.APLICA_MULTA)) {
+	// return new RespuestaGui(ErrorGui.MUESTRA_MENSAJE,
+	// respuesta.getMensaje());
+	// } else {
+	// return new RespuestaGui(ErrorGui.ERROR_TRANSACCION,
+	// respuesta.getMensaje());
+	// }
+	// }
 
 	private void limpiaModelos() {
 		this.modelos.removeAllItems();
@@ -328,8 +367,8 @@ public class DatosAlquilerPanel extends JPanel implements FocusListener, ActionL
 		this.autos.setEnabled(false);
 	}
 
-	public void cargaReserva(ReservaView reservaView) {
-
+	public void cargaReserva(ReservaView reservaView, int numeroReserva) {
+		this.numeroReserva = numeroReserva;
 		this.cliente.setText(reservaView.getNombre() + " " + reservaView.getApellido());
 		this.dni.setText(reservaView.getDni().toString());
 		this.fechaInicio.setText(reservaView.getFechaInicio());
@@ -339,7 +378,8 @@ public class DatosAlquilerPanel extends JPanel implements FocusListener, ActionL
 		this.disponibilidadButton.setVisible(false);
 		this.modelos.removeAllItems();
 		this.modelos.addItem(new ElementoCombo("", reservaView.getMarca() + " - " + reservaView.getModelo()));
-		this.modelos.setEnabled(false);
+		this.autos.removeAllItems();
+		this.autos.addItem(new ElementoCombo("", reservaView.getAnio() + " - " + reservaView.getPatente()));
 
 	}
 
