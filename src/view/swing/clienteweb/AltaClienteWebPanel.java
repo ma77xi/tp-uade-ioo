@@ -34,7 +34,6 @@ public class AltaClienteWebPanel extends JPanel implements ActionListener {
 	}
 
 	private void init() {
-
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints gBC = new GridBagConstraints();
 
@@ -67,23 +66,28 @@ public class AltaClienteWebPanel extends JPanel implements ActionListener {
 
 		gBC.anchor = GridBagConstraints.CENTER;
 		this.add(botonera, gBC);
-
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == this.guardarButton) {
+		if (e.getSource() == this.guardarButton) 
+		{
 			RespuestaGui respuesta = this.datosClienteWebPanel.altaCliente();
-			if (respuesta.getTipoRespuesta().equals(ErrorGui.OK)) {
+			
+			if (respuesta.getTipoRespuesta().equals(ErrorGui.OK)) 
+			{
 				JOptionPane.showMessageDialog(this, "Se dio creo correctamente su usuario.\nSu número de cliente es "
 						+ respuesta.getMensaje(), "Alta Usuario", JOptionPane.INFORMATION_MESSAGE);
 				this.gui.resetLogin();
-			} else {
+			} 
+			else 
+			{
 				Util.mostrarError(this, respuesta.getMensaje());
 			}
-		} else if (e.getSource() == this.volverButton) {
+		} 
+		else if (e.getSource() == this.volverButton) 
+		{
 			this.gui.resetLogin();
 		}
 	}
-
 }
