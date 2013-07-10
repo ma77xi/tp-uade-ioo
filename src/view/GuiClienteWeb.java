@@ -35,16 +35,7 @@ public class GuiClienteWeb extends JFrame implements ActionListener, MenuListene
 	private JMenu menuLogout;
 	private JMenu menuSalir;
 
-//	public static void main(String[] args) {
-//		SwingUtilities.invokeLater(new Runnable() {
-//			public void run() {
-//				AlquilerAutos sistem = new AlquilerAutos();
-//				GuiClienteWeb g = new GuiClienteWeb(sistem);
-//				g.setVisible(true);
-//			}
-//		});
-//	}
-	
+
 	public GuiClienteWeb(AlquilerAutos sistema) {
 		this.sistema = sistema;
 		login();
@@ -54,7 +45,7 @@ public class GuiClienteWeb extends JFrame implements ActionListener, MenuListene
 		// Definición del frame
 		setTitle("Alquiler Autos");
 		setResizable(false);
-		setSize(600, 350);
+		setSize(600, 300);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 

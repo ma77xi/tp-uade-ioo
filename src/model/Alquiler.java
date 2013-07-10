@@ -180,19 +180,22 @@ public class Alquiler {
 		Date fechaActual = new GregorianCalendar().getTime();
 
 		// Le doy que son 100 km por dia, mas de eso es exedente
-
 		long startTime = fechaInicio.getTime();
 		long endTime = fechaFin.getTime();
 		long diffTime = endTime - startTime;
 		long diffDays = diffTime / (1000 * 60 * 60 * 24);
 		
-		
 		float kmExtra = (this.kilometrajeRecorrido - (diffDays * 100))
 				* this.automovil.getModelo().getCostoKmExcedente();
 
 		float costoDia = this.automovil.getModelo().getCostoDia() * diffDays;
-
-		float monto = this.cargosExtra + kmExtra + costoDia;
+		
+		float monto = 0;
+		if (kmExtra > 0) {
+			monto = this.cargosExtra + kmExtra + costoDia;			
+		} else {
+			monto = this.cargosExtra + costoDia;
+		}
 
 		String detalles = "Costos: /n" + "Cargos Extra: " + String.valueOf(this.cargosExtra) + "/n"
 				+ "Kilometraje Extra: " + String.valueOf(kmExtra) + "/n" + "Cargos por dia: "

@@ -13,8 +13,9 @@ public enum RespuestaSistema {
 	AUTOMOVIL_RESERVADO(7,"Automovil Reservado"),
 	USUARIO_CONTRASEÑA_INVALIDO(9,"Usuario o contraseña inválido."),
 	USUARIO_DUPLICADO(10, "El usuario ya existe en el sistema"),
-	NRO_RESERVA_INEXISTENTE(11, "Númer de reserva inexistente"),
-	APLICA_MULTA(12, "");
+	NRO_RESERVA_INEXISTENTE(11, "Número de reserva inexistente"),
+	APLICA_MULTA(12, ""),
+	NRO_ALQUILER_INEXISTENTE(13, "Número de alquiler inexistente");
 
 	private int key;
 	private String descripcion;
