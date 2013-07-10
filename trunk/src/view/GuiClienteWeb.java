@@ -12,46 +12,53 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
-import view.swing.auto.ModificarModeloPanel;
-import view.swing.clienteweb.AltaClienteWebPanel;
 import view.swing.login.Login;
 import view.swing.reserva.AltaReservaPanel;
 import view.swing.reserva.CancelarReservaPanel;
+import view.swing.clienteweb.AltaClienteWebPanel;
+import view.swing.clienteweb.ModificarClienteWebPanel;
 import controller.AlquilerAutos;
 
 public class GuiClienteWeb extends JFrame implements ActionListener, MenuListener {
-
+	
 	private static final long serialVersionUID = -6739731088517367469L;
 
+	private AlquilerAutos sistema;
 	private String user;
 
-	private AlquilerAutos sistema;
-
 	private JMenuBar menuBar;
-	private JMenu menuCliente;
-	private JMenuItem itemModificacionCliente;
+	private JMenu menuClienteWeb;
+	private JMenuItem itemModificacionClienteWeb;
 	private JMenu menuReserva;
 	private JMenuItem itemAltaReserva;
 	private JMenuItem itemBajaReserva;
 	private JMenu menuLogout;
 	private JMenu menuSalir;
 
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				AlquilerAutos sistem = new AlquilerAutos();
+				GuiClienteWeb g = new GuiClienteWeb(sistem);
+				g.setVisible(true);
+			}
+		});
+	}
+	
 	public GuiClienteWeb(AlquilerAutos sistema) {
 		this.sistema = sistema;
 		login();
 	}
 
 	public final void login() {
-
 		// Definición del frame
 		setTitle("Alquiler Autos");
 		setResizable(false);
-		setSize(600, 300);
+		setSize(600, 350);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		getContentPane().add(new Login(this, sistema));
-
 	}
 
 	public final void init(String user) {
@@ -63,7 +70,7 @@ public class GuiClienteWeb extends JFrame implements ActionListener, MenuListene
 		// Definición del frame
 		setTitle("Alquiler Autos");
 		setResizable(false);
-		setSize(600, 300);
+		setSize(600, 350);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -71,11 +78,11 @@ public class GuiClienteWeb extends JFrame implements ActionListener, MenuListene
 		this.menuBar = new JMenuBar();
 
 		// Menú Clientes - INICIO
-		this.menuCliente = new JMenu("Clientes");
+		this.menuClienteWeb = new JMenu("Clientes");
 
-		this.itemModificacionCliente = new JMenuItem("Actualizar Datos");
-		this.itemModificacionCliente.addActionListener(this);
-		this.menuCliente.add(itemModificacionCliente);
+		this.itemModificacionClienteWeb = new JMenuItem("Actualizar Datos");
+		this.itemModificacionClienteWeb.addActionListener(this);
+		this.menuClienteWeb.add(itemModificacionClienteWeb);
 		// Menú Clientes - FIN
 
 		// Menú Reservas - INICIO
@@ -104,57 +111,61 @@ public class GuiClienteWeb extends JFrame implements ActionListener, MenuListene
 
 		// Se agregan las opciones a la barra de menú.
 		setJMenuBar(menuBar);
-		menuBar.add(menuCliente);
+		menuBar.add(menuClienteWeb);
 		menuBar.add(menuReserva);
 		menuBar.add(menuLogout);
 		menuBar.add(menuSalir);
-
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
-
-		if (event.getSource() == this.itemModificacionCliente) {
+		if (event.getSource() == this.itemModificacionClienteWeb) 
+		{
 			getContentPane().removeAll();
-			// getContentPane().add(new ModificarClientePanel(this.sistema,
-			// this));
-		} else if (event.getSource() == this.itemAltaReserva) {
+			getContentPane().add(new ModificarClienteWebPanel(this.sistema, this, this.user));
+		} 
+		else if (event.getSource() == this.itemAltaReserva) 
+		{
 			getContentPane().removeAll();
 			getContentPane().add(new AltaReservaPanel(sistema, this, this.user));
-		} else if (event.getSource() == this.itemBajaReserva) {
+		} 
+		else if (event.getSource() == this.itemBajaReserva) 
+		{
 			getContentPane().removeAll();
 			getContentPane().add(new CancelarReservaPanel(this.sistema, this));
 		}
 
 		getContentPane().revalidate();
 		getContentPane().repaint();
-
 	}
 
 	@Override
 	public void menuCanceled(MenuEvent e) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void menuDeselected(MenuEvent e) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void menuSelected(MenuEvent e) {
-		if (e.getSource() == this.menuSalir) {
-			int seleccion = JOptionPane.showConfirmDialog(null, "Está seguro que desea salir?", "Advertencia",
-					JOptionPane.YES_NO_OPTION);
-			if (seleccion == JOptionPane.YES_OPTION) {
+		if (e.getSource() == this.menuSalir) 
+		{
+			int seleccion = JOptionPane.showConfirmDialog(null, "Está seguro que desea salir?", "Advertencia", JOptionPane.YES_NO_OPTION);
+			
+			if (seleccion == JOptionPane.YES_OPTION) 
+			{
 				System.exit(0);
 			}
-		} else if (e.getSource() == this.menuLogout) {
-			int seleccion = JOptionPane.showConfirmDialog(null, "Está seguro que desea cerrar sesión?", "Advertencia",
-					JOptionPane.YES_NO_OPTION);
-			if (seleccion == JOptionPane.YES_OPTION) {
+		} 
+		else if (e.getSource() == this.menuLogout) 
+		{
+			int seleccion = JOptionPane.showConfirmDialog(null, "Está seguro que desea cerrar sesión?", "Advertencia", JOptionPane.YES_NO_OPTION);
+			
+			if (seleccion == JOptionPane.YES_OPTION) 
+			{
 				this.user = null;
 				this.resetLogin();
 			}
@@ -168,18 +179,20 @@ public class GuiClienteWeb extends JFrame implements ActionListener, MenuListene
 		getContentPane().repaint();
 	}
 
-	// public void modificarClienteReset() {
-	// getContentPane().removeAll();
-	// // getContentPane().add(new ModificarClientePanel(this.sistema, this));
-	// getContentPane().revalidate();
-	// getContentPane().repaint();
-	// }
+	public void modificarClienteWebReset() {
+		getContentPane().removeAll();
+		getContentPane().add(new ModificarClienteWebPanel(this.sistema, this, this.user));
+		getContentPane().revalidate();
+		getContentPane().repaint();
+	}
 
 	public void resetLogin() {
-
-		if (this.menuBar != null) {
+		if (this.menuBar != null) 
+		{
 			int cantidadMenu = this.menuBar.getMenuCount();
-			for (int i = 0; i < cantidadMenu; i++) {
+		
+			for (int i = 0; i < cantidadMenu; i++)
+			{
 				this.menuBar.remove(0);
 			}
 		}
@@ -203,5 +216,4 @@ public class GuiClienteWeb extends JFrame implements ActionListener, MenuListene
 		getContentPane().revalidate();
 		getContentPane().repaint();
 	}
-
 }
