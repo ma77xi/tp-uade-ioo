@@ -23,7 +23,6 @@ import view.vistas.ReservaView;
 
 public class AlquilerAutos {
 
-
 	private List<Cliente> clientes;
 	private List<Modelo> modelos;
 	private List<Alquiler> alquileres;
@@ -243,9 +242,10 @@ public class AlquilerAutos {
 				}
 			}
 
-			m.quitarAutomovil(a); 
-			//TODO:No se si esto deberia quedar o no, para eliminar el modelo cuando se queda sin autos
-			if(!m.tenesAutos()){
+			m.quitarAutomovil(a);
+			// TODO:No se si esto deberia quedar o no, para eliminar el modelo
+			// cuando se queda sin autos
+			if (!m.tenesAutos()) {
 				this.modelos.remove(m);
 			}
 			return RespuestaSistema.OK.getKey();
@@ -418,20 +418,20 @@ public class AlquilerAutos {
 
 	// --- Administración de alquileres --- INICIO
 
-	public int registrarAlquiler(int nroCliente, int nroModelo, String patente, Date fechaInicio, Date fechaFin,
-			String descripcionInspeccion, boolean entregaDocumentacion, float porcentajeDescuento) {
+	public RespuestaTransaccion registrarAlquiler(int nroCliente, int nroModelo, String patente, Date fechaInicio,
+			Date fechaFin, String descripcionInspeccion, boolean entregaDocumentacion, float porcentajeDescuento) {
 
 		Cliente c = this.buscarCliente(nroCliente);
 		if (c == null)
-			return RespuestaSistema.CLIENTE_INEXISTENTE.getKey();
+			return new RespuestaTransaccion(RespuestaSistema.CLIENTE_INEXISTENTE);
 
 		Modelo m = this.buscarModelo(nroModelo);
 		if (m == null)
-			return RespuestaSistema.MODELO_INEXISTENTE.getKey();
+			return new RespuestaTransaccion(RespuestaSistema.MODELO_INEXISTENTE);
 
 		Automovil a = m.buscarAutomovil(patente);
 		if (a == null)
-			return RespuestaSistema.AUTOMOVIL_INEXISTENTE.getKey();
+			return new RespuestaTransaccion(RespuestaSistema.AUTOMOVIL_INEXISTENTE);
 
 		Alquiler al = new Alquiler(a, c, fechaInicio, fechaFin, porcentajeDescuento, descripcionInspeccion,
 				entregaDocumentacion);
@@ -440,7 +440,7 @@ public class AlquilerAutos {
 
 		this.alquileres.add(al);
 
-		return RespuestaSistema.OK.getKey();
+		return new RespuestaTransaccion(RespuestaSistema.OK, String.valueOf(al.getNumeroAlquiler()));
 
 	}
 
@@ -569,6 +569,45 @@ public class AlquilerAutos {
 		} else {
 			return new ClienteView(c);
 		}
+	}
+
+	public Map<ModeloView, List<AutoView>> listarModelosAutosDisponibilidad(Date fechaDesde, Date fechaHasta) {
+
+		// Se crea un mapa con todos los autos de todos los modelos
+		Map<Modelo, List<Automovil>> mapaModelosAutos = new HashMap<Modelo, List<Automovil>>();
+		for (Modelo modelo : this.modelos) {
+			List<Automovil> autos = new ArrayList<Automovil>();
+			autos.addAll(modelo.getAutomoviles());
+			mapaModelosAutos.put(modelo, autos);
+		}
+
+		// Se quitan aquéllos autos que estén alquilados para esas fechas.
+		for (Alquiler alquiler : this.alquileres) {
+			if (alquiler.haySolapamiento(fechaDesde, fechaHasta)) {
+				this.remueveAutoAMapa(mapaModelosAutos, alquiler.getAutomovil());
+			}
+		}
+
+		// se quitan aquéllos autos que estén reservados para esas fechas.
+		for (Reserva reserva : this.reservas) {
+			if (reserva.haySolapamiento(fechaDesde, fechaHasta)) {
+				this.remueveAutoAMapa(mapaModelosAutos, reserva.getAutomovil());
+			}
+		}
+
+		// Se pasa a vistas.
+		Map<ModeloView, List<AutoView>> mapa = new HashMap<ModeloView, List<AutoView>>();
+		for (Modelo modelo : this.modelos) {
+			List<AutoView> autos = new ArrayList<AutoView>();
+			if (modelo.getAutomoviles() != null) {
+				for (Automovil auto : modelo.getAutomoviles()) {
+					autos.add(new AutoView(modelo.getModelo(), auto));
+				}
+			}
+			mapa.put(new ModeloView(modelo), autos);
+		}
+
+		return mapa;
 	}
 
 }
