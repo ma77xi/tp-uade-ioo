@@ -215,5 +215,9 @@ public class Alquiler {
 		Date fechaFinal = (null != this.fechaDevolucion) ? this.fechaDevolucion : this.fechaFin;
 		return this.fechaInicio.compareTo(fechaHasta) <= 0 && fechaFinal.compareTo(fechaDesde) >= 0;
 	}
+	
+	public boolean estasActivo() {
+		return this.factura != null;
+	}
 
 }
