@@ -3,14 +3,9 @@ package view.swing.alquiler;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -28,11 +23,9 @@ import util.RespuestaSistema;
 import util.RespuestaTransaccion;
 import util.Util;
 import view.vistas.AlquilerView;
-import view.vistas.AutoView;
-import view.vistas.ModeloView;
 import controller.AlquilerAutos;
 
-public class DatosDevolucionPanel extends JPanel implements FocusListener, ActionListener {
+public class DatosDevolucionPanel extends JPanel implements FocusListener {
 
 	private static final long serialVersionUID = -6697214022528265655L;
 
@@ -69,11 +62,9 @@ public class DatosDevolucionPanel extends JPanel implements FocusListener, Actio
 	private JLabel cargosExtraLabel;
 
 	private int numeroAlquiler;
-	private Map<ModeloView, List<AutoView>> mapaModelosAutos;
 
 	public DatosDevolucionPanel(AlquilerAutos sistema) {
 		this.sistema = sistema;
-		this.mapaModelosAutos = new HashMap<ModeloView, List<AutoView>>();
 		this.numeroAlquiler = -1;
 		this.init();
 	}
@@ -197,11 +188,47 @@ public class DatosDevolucionPanel extends JPanel implements FocusListener, Actio
 		this.obtuvoDaniosLabel = new JLabel("Obtuvo Daños");
 		this.innerPanel.add(this.obtuvoDaniosLabel, gBC);
 
+		y++;
+
+		gBC.gridy = y;
+
+		gBC.gridx = 0;
+		this.combustibleLabel = new JLabel("Combustible:");
+		this.innerPanel.add(this.combustibleLabel, gBC);
+
+		gBC.gridx = 1;
+		gBC.anchor = GridBagConstraints.NORTHWEST;
+		this.combustible = new JTextField(8);
+		this.innerPanel.add(this.combustible, gBC);
+
+		gBC.gridx = 2;
+		gBC.anchor = GridBagConstraints.NORTHEAST;
+		this.kilometrajeLabel = new JLabel("Kilometraje:");
+		this.innerPanel.add(this.kilometrajeLabel, gBC);
+
+		gBC.gridx = 3;
+		gBC.anchor = GridBagConstraints.NORTHWEST;
+		this.kilometraje = new JTextField(8);
+		this.innerPanel.add(this.kilometraje, gBC);
+
+		y++;
+
+		gBC.gridy = y;
+
+		gBC.gridx = 0;
+		this.cargosExtraLabel = new JLabel("Cargos Extra:");
+		this.innerPanel.add(this.cargosExtraLabel, gBC);
+
+		gBC.gridx = 1;
+		gBC.anchor = GridBagConstraints.NORTHWEST;
+		this.cargosExtra = new JTextField(8);
+		this.innerPanel.add(this.cargosExtra, gBC);
+
 	}
 
 	private boolean todosCamposValidos() {
-		return Util.fechaValida(this.fechaInicio.getText()) && Util.fechaValida(this.fechaFin.getText())
-				&& this.modelos.getSelectedItem() != null && this.autos.getSelectedItem() != null;
+		return Util.fechaValida(this.fechaDevolucion.getText()) && Util.numeroValido(this.combustible.getText())
+				&& Util.numeroValido(this.kilometraje.getText()) && Util.decimalValido(this.cargosExtra.getText());
 	}
 
 	// Focus Listener
@@ -219,90 +246,22 @@ public class DatosDevolucionPanel extends JPanel implements FocusListener, Actio
 		}
 	}
 
-	// Action Listener
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// if (e.getSource() == this.disponibilidadButton) {
-		// this.mapaModelosAutos = sistema.listarModelosAutosDisponibilidad(
-		// Util.parseFecha(this.fechaInicio.getText()),
-		// Util.parseFecha(this.fechaFin.getText()));
-		// this.modelos.removeAllItems();
-		// for (ModeloView modelo : mapaModelosAutos.keySet()) {
-		// if (!mapaModelosAutos.get(modelo).isEmpty()) {
-		// this.modelos.addItem(new
-		// ElementoCombo(String.valueOf(modelo.getNumeroModelo()),
-		// modelo.getMarca()
-		// + " - " + modelo.getModelo()));
-		// }
-		// }
-		// this.modelos.setEnabled(true);
-		// } else if (e.getSource() == this.modelos) {
-		// this.autos.removeAllItems();
-		// ElementoCombo modeloSeleccionado = (ElementoCombo)
-		// this.modelos.getSelectedItem();
-		// for (ModeloView modelo : mapaModelosAutos.keySet()) {
-		// if (!mapaModelosAutos.get(modelo).isEmpty()
-		// && modelo.getNumeroModelo() ==
-		// Integer.parseInt(modeloSeleccionado.getCodigo())) {
-		// for (AutoView auto : mapaModelosAutos.get(modelo)) {
-		// this.autos.addItem(new ElementoCombo(auto.getPatente(),
-		// auto.getAnio() + " - "
-		// + auto.getPatente()));
-		// }
-		// }
-		// }
-		// this.autos.setEnabled(true);
-		// }
-	}
-
 	public RespuestaGui registrarDevolucion() {
 		if (this.todosCamposValidos()) {
-			// ElementoCombo modelo = (ElementoCombo)
-			// this.modelos.getSelectedItem();
-			// ElementoCombo auto = (ElementoCombo)
-			// this.autos.getSelectedItem();
-			// RespuestaTransaccion respuesta =
-			// this.sistema.registrarAlquiler(this.numeroCliente,
-			// Integer.parseInt(modelo.getCodigo()), auto.getCodigo(),
-			// Util.parseFecha(this.fechaInicio.getText()),
-			// Util.parseFecha(this.fechaFin.getText()),
-			// this.inspeccion.getText(), this.documentacion.isSelected(),
-			// (this.descuento != null) ?
-			// Float.parseFloat(this.descuento.getText()) : 0);
-			// if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
-			// return new RespuestaGui(ErrorGui.OK, respuesta.getMensaje());
-			// } else {
-			// return new RespuestaGui(ErrorGui.ERROR_TRANSACCION,
-			// respuesta.getTipoRespuesta().getDescripcion());
-			// }
+			RespuestaTransaccion respuesta = this.sistema.registrarDevolucionAutomovil(this.numeroAlquiler,
+					Util.parseFecha(this.fechaDevolucion.getText()), Float.parseFloat(this.combustible.getText()),
+					Float.parseFloat(this.kilometraje.getText()), this.obtuvoDanios.isSelected(),
+					Float.parseFloat(this.cargosExtra.getText()));
+			if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
+				return new RespuestaGui(ErrorGui.OK, respuesta.getMensaje());
+			} else {
+				return new RespuestaGui(ErrorGui.ERROR_TRANSACCION, respuesta.getTipoRespuesta().getDescripcion());
+			}
 		} else {
 			return new RespuestaGui(ErrorGui.ERROR_VALIDACION);
 		}
-		return null;
+
 	}
-
-	// public RespuestaGui generarAlquilerConReserva() {
-	// // Los campos obligatorios están precargados; no se valida.
-	// RespuestaTransaccion respuesta =
-	// this.sistema.registrarAlquiler(this.numeroAlquiler,
-	// this.inspeccion.getText(),
-	// this.documentacion.isSelected(), (this.descuento != null) ?
-	// Float.parseFloat(this.descuento.getText())
-	// : 0);
-	// if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
-	// return new RespuestaGui(ErrorGui.OK, respuesta.getMensaje());
-	// } else {
-	// return new RespuestaGui(ErrorGui.ERROR_TRANSACCION,
-	// respuesta.getTipoRespuesta().getDescripcion());
-	// }
-	// }
-
-	// private void limpiaModelos() {
-	// this.modelos.removeAllItems();
-	// this.modelos.setEnabled(false);
-	// this.autos.removeAllItems();
-	// this.autos.setEnabled(false);
-	// }
 
 	public void cargaAlquiler(AlquilerView alquilerView, int numeroAlquiler) {
 		this.numeroAlquiler = numeroAlquiler;
@@ -315,12 +274,5 @@ public class DatosDevolucionPanel extends JPanel implements FocusListener, Actio
 		this.autos.removeAllItems();
 		this.autos.addItem(new ElementoCombo("", alquilerView.getAnio() + " - " + alquilerView.getPatente()));
 	}
-
-	// public void cargaCliente(ClienteView clienteView) {
-	// this.cliente.setText(clienteView.getNombre() + " " +
-	// clienteView.getApellido());
-	// this.dni.setText(clienteView.getDni().toString());
-	// this.numeroCliente = clienteView.getNumeroCliente();
-	// }
 
 }

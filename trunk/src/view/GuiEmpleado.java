@@ -8,12 +8,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
 import view.swing.alquiler.AlquilerConReservaPanel;
 import view.swing.alquiler.AltaAlquilerPanel;
+import view.swing.alquiler.RegistrarDevolucionPanel;
 import view.swing.auto.AltaAutoPanel;
 import view.swing.auto.AltaModeloPanel;
 import view.swing.auto.ModificarAutoPanel;
@@ -42,24 +42,12 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 	private JMenuItem itemModificarModelo;
 	private JMenuItem itemAltaAuto;
 	private JMenuItem itemModificarAuto;
-	private JMenu menuReserva;
-	private JMenuItem itemAltaReserva;
-	private JMenuItem itemBajaReserva;
 	private JMenu menuAlquiler;
 	private JMenuItem itemAltaAlquiler;
 	private JMenuItem itemAlquilerConReserva;
 	private JMenuItem itemDevolucion;
 	private JMenu menuSalir;
 
-//	public static void main(String[] args) {
-//		SwingUtilities.invokeLater(new Runnable() {
-//			public void run() {
-//				AlquilerAutos sistem = new AlquilerAutos();
-//				GuiEmpleado g = new GuiEmpleado(sistem);
-//				g.setVisible(true);
-//			}
-//		});
-//	}
 
 	public GuiEmpleado(AlquilerAutos sistem) {
 		this.sistema = sistem;
@@ -113,17 +101,7 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 		this.menuAuto.add(itemModificarAuto);
 		// Menú Autos - FIN
 
-		// Menú Reservas - INICIO
-		this.menuReserva = new JMenu("Reservas");
 
-		this.itemAltaReserva = new JMenuItem("Alta Reserva");
-		this.itemAltaReserva.addActionListener(this);
-		this.menuReserva.add(itemAltaReserva);
-
-		this.itemBajaReserva = new JMenuItem("Baja Reserva");
-		this.itemBajaReserva.addActionListener(this);
-		this.menuReserva.add(itemBajaReserva);
-		// Menú Reservas - FIN
 
 		// Menú Alquileres - INICIO
 		this.menuAlquiler = new JMenu("Alquileres");
@@ -151,7 +129,6 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 		setJMenuBar(menuBar);
 		menuBar.add(menuCliente);
 		menuBar.add(menuAuto);
-		menuBar.add(menuReserva);
 		menuBar.add(menuAlquiler);
 		menuBar.add(menuSalir);
 	}
@@ -197,11 +174,19 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 		{
 			getContentPane().removeAll();
 			getContentPane().add(new AltaAlquilerPanel(this.sistema, this));
-		} else if (event.getSource() == this.itemAlquilerConReserva) {
+		} 
+		else if (event.getSource() == this.itemAlquilerConReserva) 
+		{
 			getContentPane().removeAll();
 			getContentPane().add(new AlquilerConReservaPanel(this.sistema, this));
 		}
-
+		else if (event.getSource() == this.itemDevolucion) 
+		{
+			getContentPane().removeAll();
+			getContentPane().add(new RegistrarDevolucionPanel(this.sistema, this));
+		}
+		
+		
 		getContentPane().revalidate();
 		getContentPane().repaint();
 	}

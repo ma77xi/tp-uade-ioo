@@ -1,7 +1,6 @@
 package view.vistas;
 
-import model.Modelo;
-import model.Reserva;
+import model.Alquiler;
 import util.Util;
 
 public class AlquilerView {
@@ -15,19 +14,17 @@ public class AlquilerView {
 	private String patente;
 	private String fechaInicio;
 	private String fechaFin;
-	private String multaCancelacion;
 
-	public AlquilerView(Reserva reserva, Modelo modelo) {
-		this.nombre = reserva.getCliente().getNombre();
-		this.apellido = reserva.getCliente().getApellido();
-		this.dni = reserva.getCliente().getDni();
-		this.modelo = modelo.getModelo();
-		this.marca = modelo.getMarca();
-		this.anio = String.valueOf(reserva.getAutomovil().getAnio());
-		this.patente = reserva.getAutomovil().getPatente();
-		this.fechaInicio = Util.parseFecha(reserva.getFechaInicio());
-		this.fechaFin = Util.parseFecha(reserva.getFechaFin());
-		this.multaCancelacion = String.valueOf(reserva.getMultaCancelacion());
+	public AlquilerView(Alquiler alquiler) {
+		this.nombre = alquiler.getCliente().getNombre();
+		this.apellido = alquiler.getCliente().getApellido();
+		this.dni = alquiler.getCliente().getDni();
+		this.modelo = alquiler.getAutomovil().getModelo().getModelo();
+		this.marca = alquiler.getAutomovil().getModelo().getMarca();
+		this.anio = String.valueOf(alquiler.getAutomovil().getAnio());
+		this.patente = alquiler.getAutomovil().getPatente();
+		this.fechaInicio = Util.parseFecha(alquiler.getFechaInicio());
+		this.fechaFin = Util.parseFecha(alquiler.getFechaFin());
 	}
 
 	public String getNombre() {
@@ -64,10 +61,6 @@ public class AlquilerView {
 
 	public String getFechaFin() {
 		return fechaFin;
-	}
-
-	public String getMultaCancelacion() {
-		return multaCancelacion;
 	}
 
 }

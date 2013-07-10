@@ -16,6 +16,7 @@ import model.TipoModelo;
 import util.ElementoCombo;
 import util.RespuestaSistema;
 import util.RespuestaTransaccion;
+import view.vistas.AlquilerView;
 import view.vistas.AutoView;
 import view.vistas.ClienteView;
 import view.vistas.ClienteWebView;
@@ -464,14 +465,19 @@ public class AlquilerAutos {
 		return new RespuestaTransaccion(RespuestaSistema.OK, String.valueOf(al.getNumeroAlquiler()));
 	}
 
-	public int registrarDevolucionAutomovil(int nroAlquiler, Date fechaDevolucion, float cantidadCombustible,
+	public RespuestaTransaccion registrarDevolucionAutomovil(int nroAlquiler, Date fechaDevolucion, float cantidadCombustible,
 			float kilometrosRecorridos, boolean obtuvoDanios, float cargosExtra) {
 
 		Alquiler a = this.buscarAlquiler(nroAlquiler);
+		
+		if (a == null) {
+			return new RespuestaTransaccion(RespuestaSistema.NRO_ALQUILER_INEXISTENTE);
+		}
+		
 		a.registrarDevolucion(fechaDevolucion, cantidadCombustible, kilometrosRecorridos, obtuvoDanios, cargosExtra);
 		a.facturar();
 
-		return RespuestaSistema.OK.getKey();
+		return new RespuestaTransaccion(RespuestaSistema.OK, String.valueOf(a.getFactura().getMonto()));
 
 	}
 
@@ -643,6 +649,17 @@ public class AlquilerAutos {
 		}
 
 		return mapa;
+	}
+
+	public AlquilerView buscarAlquilerView(int nroAlquiler) {
+		
+		for (Alquiler a : this.alquileres) {
+			if (a.sosAlquiler(nroAlquiler)) {
+				return new AlquilerView(a);
+			}
+		}
+
+		return null;
 	}
 
 }
