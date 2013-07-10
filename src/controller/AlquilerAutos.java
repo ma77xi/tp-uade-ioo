@@ -18,6 +18,7 @@ import util.RespuestaSistema;
 import util.RespuestaTransaccion;
 import view.vistas.AutoView;
 import view.vistas.ClienteView;
+import view.vistas.ClienteWebView;
 import view.vistas.ModeloView;
 import view.vistas.ReservaView;
 
@@ -80,7 +81,7 @@ public class AlquilerAutos {
 	public RespuestaTransaccion modificarClienteWeb(String nombre, String apellido, Date fechaNacimiento,
 			String domicilio, String telefono, Long dni, String sexo, String nacionalidad, String usuario,
 			String password) {
-		ClienteWeb c = (ClienteWeb) this.buscarCliente(dni);
+		ClienteWeb c = (ClienteWeb) this.buscarCliente(usuario);
 
 		if (c != null) 
 		{
@@ -579,6 +580,19 @@ public class AlquilerAutos {
 
 	}
 
+	public ClienteWebView buscarClienteWebView(String user) {
+		ClienteWeb c = this.buscarCliente(user);
+
+		if (c == null) 
+		{
+			return null;
+		} 
+		else 
+		{
+			return new ClienteWebView(c);
+		}
+	}
+	
 	public ClienteView buscarClienteView(String user) {
 		Cliente c = this.buscarCliente(user);
 

@@ -24,7 +24,7 @@ import util.RespuestaSistema;
 import util.RespuestaGui;
 import util.RespuestaTransaccion;
 import util.Util;
-import view.vistas.ClienteView;
+import view.vistas.ClienteWebView;
 import controller.AlquilerAutos;
 
 public class DatosClienteWebPanel extends JPanel implements FocusListener {
@@ -226,6 +226,7 @@ public class DatosClienteWebPanel extends JPanel implements FocusListener {
 		gBC.gridx = 1;
 		this.user = new JTextField(15);
 		this.innerPanel.add(this.user, gBC);
+		this.user.setEnabled(false);
 
 		gBC.gridx = 2;
 		this.passwordLabel = new JLabel("Contraseña:");
@@ -290,18 +291,22 @@ public class DatosClienteWebPanel extends JPanel implements FocusListener {
 			} 
 			else 
 			{
-				component.setEnabled(enable);
+				if(component != this.user)
+				{
+					component.setEnabled(enable);
+				}
 			}
 		}
 	}
 
-	public void cargaCliente(ClienteView clienteView) {
+	public void cargaCliente(ClienteWebView clienteView) {
 		this.nombre.setText(clienteView.getNombre());
 		this.apellido.setText(clienteView.getApellido());
 		this.domicilio.setText(clienteView.getDomicilio());
 		this.fechaNacimiento.setText(clienteView.getFechaNacimiento());
 		this.telefono.setValue(clienteView.getTelefono());
 		this.dni.setText(clienteView.getDni().toString());
+		
 		if (clienteView.isMasculino()) 
 		{
 			this.sexoM.setSelected(true);
@@ -311,6 +316,9 @@ public class DatosClienteWebPanel extends JPanel implements FocusListener {
 			this.sexoF.setSelected(true);
 		}
 		this.nacionalidad.setText(clienteView.getNacionalidad());
+		this.user.setText(clienteView.getUser());
+		this.password.setText(clienteView.getPassword());
+		this.passwordConfirmation.setText(clienteView.getPassword());
 	}
 
 	public RespuestaGui altaCliente() {
@@ -334,6 +342,7 @@ public class DatosClienteWebPanel extends JPanel implements FocusListener {
 								this.nacionalidad.getText(), 
 								this.user.getText(),
 								password);
+				
 				if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) 
 				{
 					return new RespuestaGui(ErrorGui.OK, respuesta.getMensaje());
@@ -370,7 +379,8 @@ public class DatosClienteWebPanel extends JPanel implements FocusListener {
 							sexoSeleccionado,
 							this.nacionalidad.getText(),
 							this.user.getText(),
-							this.password.toString());
+							new String(this.password.getPassword()));
+			
 			if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK))
 			{
 				return new RespuestaGui(ErrorGui.OK, respuesta.getMensaje());

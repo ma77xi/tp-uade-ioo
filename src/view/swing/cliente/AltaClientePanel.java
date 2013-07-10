@@ -26,9 +26,8 @@ public class AltaClientePanel extends MenuPanel implements ActionListener {
 		super(sistema, gui);
 		this.init();
 	}
-
+	
 	private void init() {
-
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints gBC = new GridBagConstraints();
 
@@ -48,7 +47,6 @@ public class AltaClientePanel extends MenuPanel implements ActionListener {
 		this.guardarButton = new JButton("Guardar");
 		this.guardarButton.addActionListener(this);
 		this.add(guardarButton, gBC);
-
 	}
 
 	@Override
@@ -66,7 +64,5 @@ public class AltaClientePanel extends MenuPanel implements ActionListener {
 		} else {
 			Util.mostrarError(this, respuesta.getMensaje());
 		}
-
 	}
-
 }

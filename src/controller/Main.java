@@ -30,9 +30,9 @@ public class Main {
 		sistema.altaAutomovil(4, "TFV 946", 2013, 100L, 40.0f);
 
 		// Precarga de clientes
-		sistema.altaClienteWeb("Intro", "O.O.", Util.parseFecha("01/03/2013"), "Lima 717", "(011)4555-9112", 12345678L,
+		sistema.altaClienteWeb("Intro", "O.O.", Util.parseFecha("01/03/2013"), "Lima 717", "(011) 4555-9112", 12345678L,
 				"M", "Argentina", "ioo", "123");
-		sistema.altaClienteWeb("Intro2", "1", Util.parseFecha("01/03/2013"), "Lima 717", "(011)4555-9112", 11111L, "M",
+		sistema.altaClienteWeb("Intro2", "1", Util.parseFecha("01/03/2013"), "Lima 717", "(011) 4555-9112", 11111L, "M",
 				"Argentina", "ioo2", "123");
 	
 		GuiEmpleado gui = new GuiEmpleado(sistema);
