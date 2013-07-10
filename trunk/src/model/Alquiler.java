@@ -181,11 +181,16 @@ public class Alquiler {
 
 		// Le doy que son 100 km por dia, mas de eso es exedente
 
-		float kmExtra = (this.kilometrajeRecorrido - Float.intBitsToFloat(fechaInicio.compareTo(fechaFin) * 100))
+		long startTime = fechaInicio.getTime();
+		long endTime = fechaFin.getTime();
+		long diffTime = endTime - startTime;
+		long diffDays = diffTime / (1000 * 60 * 60 * 24);
+		
+		
+		float kmExtra = (this.kilometrajeRecorrido - (diffDays * 100))
 				* this.automovil.getModelo().getCostoKmExcedente();
 
-		float costoDia = this.automovil.getModelo().getCostoDia()
-				* Float.intBitsToFloat(fechaInicio.compareTo(fechaFin));
+		float costoDia = this.automovil.getModelo().getCostoDia() * diffDays;
 
 		float monto = this.cargosExtra + kmExtra + costoDia;
 
