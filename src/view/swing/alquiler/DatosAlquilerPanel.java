@@ -103,10 +103,6 @@ public class DatosAlquilerPanel extends JPanel implements FocusListener, ActionL
 		gBC.gridx = 1;
 		this.cliente = new JTextField(15);
 		this.cliente.setEditable(false);
-		// if (this.clienteView != null) {
-		// this.cliente.setText(this.clienteView.getNombre() + " " +
-		// this.clienteView.getApellido());
-		// }
 		this.innerPanel.add(this.cliente, gBC);
 
 		gBC.gridx = 2;
@@ -116,9 +112,6 @@ public class DatosAlquilerPanel extends JPanel implements FocusListener, ActionL
 		gBC.gridx = 3;
 		this.dni = new JTextField(15);
 		this.dni.setEditable(false);
-		// if (this.clienteView != null) {
-		// this.dni.setText(this.clienteView.getDni().toString());
-		// }
 		this.innerPanel.add(this.dni, gBC);
 
 		y++;
@@ -337,28 +330,14 @@ public class DatosAlquilerPanel extends JPanel implements FocusListener, ActionL
 	public RespuestaGui generarAlquilerConReserva() {
 		// Los campos obligatorios están precargados; no se valida.
 		RespuestaTransaccion respuesta = this.sistema.registrarAlquiler(this.numeroReserva, this.inspeccion.getText(),
-				this.documentacion.isSelected(), (this.descuento != null) ? Float.parseFloat(this.descuento.getText()) : 0);
+				this.documentacion.isSelected(), (this.descuento != null) ? Float.parseFloat(this.descuento.getText())
+						: 0);
 		if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
 			return new RespuestaGui(ErrorGui.OK, respuesta.getMensaje());
 		} else {
 			return new RespuestaGui(ErrorGui.ERROR_TRANSACCION, respuesta.getTipoRespuesta().getDescripcion());
 		}
 	}
-
-	// public RespuestaGui cancelarReserva(Long numeroReserva) {
-	// RespuestaTransaccion respuesta =
-	// sistema.cancelarReserva(numeroReserva.intValue());
-	// if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
-	// return new RespuestaGui(ErrorGui.OK);
-	// } else if
-	// (respuesta.getTipoRespuesta().equals(RespuestaSistema.APLICA_MULTA)) {
-	// return new RespuestaGui(ErrorGui.MUESTRA_MENSAJE,
-	// respuesta.getMensaje());
-	// } else {
-	// return new RespuestaGui(ErrorGui.ERROR_TRANSACCION,
-	// respuesta.getMensaje());
-	// }
-	// }
 
 	private void limpiaModelos() {
 		this.modelos.removeAllItems();

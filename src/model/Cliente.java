@@ -114,6 +114,7 @@ public class Cliente {
 		this.numeroCliente = Cliente.obtenerNumeroCiente();
 		this.sexo = sexo;
 		this.telefono = telefono;
+
 	}
 
 	public boolean sosCliente(Long dni) {
@@ -135,5 +136,7 @@ public class Cliente {
 		this.sexo = sexo;
 		this.telefono = telefono;
 		this.dni = dni;
+
 	}
+
 }
