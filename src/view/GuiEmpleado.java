@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
+import view.swing.alquiler.AltaAlquilerPanel;
 import view.swing.auto.AltaAutoPanel;
 import view.swing.auto.AltaModeloPanel;
 import view.swing.auto.ModificarAutoPanel;
@@ -67,7 +68,7 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 		// Definición del frame
 		setTitle("Alquiler Autos");
 		setResizable(false);
-		setSize(600, 300);
+		setSize(600, 350);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -171,6 +172,9 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 		} else if (event.getSource() == this.itemModificarAuto) {
 			getContentPane().removeAll();
 			getContentPane().add(new ModificarAutoPanel(this.sistema, this));
+		} else if (event.getSource() == this.itemAltaAlquiler) {
+			getContentPane().removeAll();
+			getContentPane().add(new AltaAlquilerPanel(this.sistema, this));
 		}
 
 		getContentPane().revalidate();
