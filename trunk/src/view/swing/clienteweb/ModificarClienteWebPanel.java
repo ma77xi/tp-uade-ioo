@@ -7,9 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 
 import util.ErrorGui;
 import util.RespuestaGui;
@@ -17,7 +15,7 @@ import util.Util;
 import view.GuiClienteWeb;
 import view.GuiEmpleado;
 import view.swing.MenuPanel;
-import view.vistas.ClienteView;
+import view.vistas.ClienteWebView;
 import controller.AlquilerAutos;
 
 public class ModificarClienteWebPanel extends MenuPanel implements ActionListener {
@@ -26,9 +24,6 @@ public class ModificarClienteWebPanel extends MenuPanel implements ActionListene
 
 	private DatosClienteWebPanel datosClienteWebPanel;
 	
-	private AlquilerAutos sistema;
-	private GuiClienteWeb gui;
-
 	private JButton guardarButton;
 
 	public ModificarClienteWebPanel(AlquilerAutos sistema, GuiEmpleado gui) {
@@ -39,13 +34,14 @@ public class ModificarClienteWebPanel extends MenuPanel implements ActionListene
 	public ModificarClienteWebPanel(AlquilerAutos sistema, GuiClienteWeb gui, String user) {
 		super(sistema, gui);
 		
-		ClienteView clienteView = this.sistema.buscarClienteView(user);
+		ClienteWebView clienteView = sistema.buscarClienteWebView(user);
 		
-		if (clienteView != null) 
+		this.datosClienteWebPanel = new DatosClienteWebPanel(sistema);
+		if (clienteView != null)
 		{
 			this.datosClienteWebPanel.cargaCliente(clienteView);
 			this.datosClienteWebPanel.enableAllComponents(true);
-		} 
+		}
 		else 
 		{
 			Util.mostrarError(this, "No se encontró al usuario " + user);
@@ -66,8 +62,6 @@ public class ModificarClienteWebPanel extends MenuPanel implements ActionListene
 		gBC.gridy = y;
 		gBC.gridx = 0;
 		gBC.gridwidth = 4;
-		this.datosClienteWebPanel = new DatosClienteWebPanel(sistema);
-		this.datosClienteWebPanel.enableAllComponents(false);
 		this.add(this.datosClienteWebPanel, gBC);
 
 		y++;
@@ -87,17 +81,9 @@ public class ModificarClienteWebPanel extends MenuPanel implements ActionListene
 			RespuestaGui respuesta = this.datosClienteWebPanel.modificarCliente();
 			if (respuesta.getTipoRespuesta().equals(ErrorGui.OK)) 
 			{
-				int seleccion = JOptionPane.showConfirmDialog(null, "Se actualizó correctamente al cliente"
-						+ "\nDesea modificar otro Cliente?", "Modificación Cliente", JOptionPane.YES_NO_OPTION);
-				
-				if (seleccion == JOptionPane.YES_OPTION) 
-				{
-					this.gui.modificarClienteWebReset();
-				} 
-				else 
-				{
-					this.gui.reset();
-				}
+				JOptionPane.showMessageDialog(this, "Se actualizó correctamente al cliente",
+							"Modificación Exitosa", JOptionPane.INFORMATION_MESSAGE);
+				guiClienteWeb.reset();
 			} 
 			else 
 			{
