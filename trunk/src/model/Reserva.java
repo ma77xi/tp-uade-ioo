@@ -65,11 +65,16 @@ public class Reserva {
 	public Reserva(Automovil automovil, Cliente cliente, Date fechaFin,
 			Date fechaInicio) {
 		
+		long startTime = fechaInicio.getTime();
+		long endTime = fechaFin.getTime();
+		long diffTime = endTime - startTime;
+		long diffDays = diffTime / (1000 * 60 * 60 * 24);
+		
 		this.automovil = automovil;
 		this.cliente = cliente;
 		this.fechaFin = fechaFin;
 		this.fechaInicio = fechaInicio;
-		this.multaCancelacion = (automovil.getModelo().getCostoDia() * fechaInicio.compareTo(fechaFin) * 5 / 100);
+		this.multaCancelacion = (automovil.getModelo().getCostoDia() * diffDays * 5 / 100);
 		this.numeroReserva = Reserva.obtenerNumeroReserva();
 	}
 
