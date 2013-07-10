@@ -43,7 +43,6 @@ public class Login extends JPanel implements ActionListener {
 	}
 
 	private void init() {
-
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints gBC = new GridBagConstraints();
 
@@ -93,23 +92,32 @@ public class Login extends JPanel implements ActionListener {
 		this.nuevoButton = new JButton("Soy nuevo");
 		this.nuevoButton.addActionListener(this);
 		this.add(this.nuevoButton, gBC);
-
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == this.loginButton) {
-			if (todosCamposValidos()) {
+		if (e.getSource() == this.loginButton) 
+		{
+			if (todosCamposValidos()) 
+			{
 				RespuestaTransaccion respuesta = this.sistema.login(this.user.getText(), new String(this.password.getPassword()));
-				if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
+				
+				if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) 
+				{
 					this.gui.reset(this.user.getText());
-				} else {
+				} 
+				else 
+				{
 					Util.mostrarError(this, respuesta.getTipoRespuesta().getDescripcion());
 				}
-			} else {
+			} 
+			else 
+			{
 				Util.mostrarError(this, ErrorGui.ERROR_VALIDACION.getDescripcion());
 			}
-		} else if (e.getSource() == this.nuevoButton) {
+		} 
+		else if (e.getSource() == this.nuevoButton) 
+		{
 			gui.altaClienteWebReset();
 		}
 	}
@@ -117,5 +125,4 @@ public class Login extends JPanel implements ActionListener {
 	private boolean todosCamposValidos() {
 		return this.user.getText() != "" && this.password.getPassword() != null;
 	}
-
 }
