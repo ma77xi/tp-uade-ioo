@@ -248,8 +248,6 @@ public class AlquilerAutos {
 			}
 
 			m.quitarAutomovil(a);
-			// TODO:No se si esto deberia quedar o no, para eliminar el modelo
-			// cuando se queda sin autos
 			if (!m.tenesAutos()) {
 				this.modelos.remove(m);
 			}
@@ -536,7 +534,7 @@ public class AlquilerAutos {
 
 		// Se quitan aquéllos autos que estén alquilados para esas fechas.
 		for (Alquiler alquiler : this.alquileres) {
-			if (alquiler.haySolapamiento(fechaDesde, fechaHasta)) {
+			if (alquiler.estasActivo() && alquiler.haySolapamiento(fechaDesde, fechaHasta)) {
 				this.remueveAutoAMapa(mapaModelosAutos, alquiler.getAutomovil());
 			}
 		}
@@ -624,7 +622,7 @@ public class AlquilerAutos {
 
 		// Se quitan aquéllos autos que estén alquilados para esas fechas.
 		for (Alquiler alquiler : this.alquileres) {
-			if (alquiler.haySolapamiento(fechaDesde, fechaHasta)) {
+			if (alquiler.estasActivo() && alquiler.haySolapamiento(fechaDesde, fechaHasta)) {
 				this.remueveAutoAMapa(mapaModelosAutos, alquiler.getAutomovil());
 			}
 		}
