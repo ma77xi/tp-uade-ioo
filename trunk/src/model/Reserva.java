@@ -74,7 +74,8 @@ public class Reserva {
 		this.cliente = cliente;
 		this.fechaFin = fechaFin;
 		this.fechaInicio = fechaInicio;
-		this.multaCancelacion = (automovil.getModelo().getCostoDia() * diffDays * 5 / 100);
+		float costoDia = automovil.getModelo().getCostoDia();
+		this.multaCancelacion = (costoDia * diffDays * 10 / 100);
 		this.numeroReserva = Reserva.obtenerNumeroReserva();
 	}
 
