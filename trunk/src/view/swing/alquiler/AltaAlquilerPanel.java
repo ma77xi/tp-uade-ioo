@@ -97,7 +97,7 @@ public class AltaAlquilerPanel extends JPanel implements ActionListener {
 				Util.mostrarError(this, "Número de cliente inválido");
 			}
 		} else if (e.getSource() == this.generarAlquilerButton) {
-			RespuestaGui respuesta = this.datosAlquilerPanel.generarReserva();
+			RespuestaGui respuesta = this.datosAlquilerPanel.generarAlquiler();
 			if (respuesta.getTipoRespuesta().equals(ErrorGui.OK)) {
 				JOptionPane.showMessageDialog(this,
 						"Se generó correctamente la reserva número " + respuesta.getMensaje(), "Reseva Exitosa",

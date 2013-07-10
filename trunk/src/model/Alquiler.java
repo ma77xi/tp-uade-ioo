@@ -1,6 +1,5 @@
 package model;
 
-
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -131,14 +130,25 @@ public class Alquiler {
 		this.factura = factura;
 	}
 
-	public Alquiler(Automovil automovil, Cliente cliente, Date fechaInicio,
-			Date fechaFin, float porcentajeDescuento,
+	public Alquiler(Automovil automovil, Cliente cliente, Date fechaInicio, Date fechaFin, float porcentajeDescuento,
 			String descripcionInspeccion, boolean entregoDocumentacion) {
 
 		this.automovil = automovil;
 		this.cliente = cliente;
 		this.fechaFin = fechaFin;
 		this.fechaInicio = fechaInicio;
+		this.porcentajeDescuento = porcentajeDescuento;
+		this.descripcionInspeccion = descripcionInspeccion;
+		this.entregoDocumentacion = entregoDocumentacion;
+		this.numeroAlquiler = Alquiler.obtenerNumeroAlquiler();
+		this.factura = null;
+	}
+
+	public Alquiler(Reserva r, float porcentajeDescuento, String descripcionInspeccion, boolean entregoDocumentacion) {
+		this.automovil = r.getAutomovil();
+		this.cliente = r.getCliente();
+		this.fechaFin = r.getFechaFin();
+		this.fechaInicio = r.getFechaInicio();
 		this.porcentajeDescuento = porcentajeDescuento;
 		this.descripcionInspeccion = descripcionInspeccion;
 		this.entregoDocumentacion = entregoDocumentacion;
@@ -154,8 +164,7 @@ public class Alquiler {
 		return this.numeroAlquiler == nroAlquiler;
 	}
 
-	public void registrarDevolucion(Date fechaDevolucion,
-			float cantidadCombustible, float kilometrosRecorridos,
+	public void registrarDevolucion(Date fechaDevolucion, float cantidadCombustible, float kilometrosRecorridos,
 			boolean obtuvoDanios, float cargosExtra) {
 
 		this.fechaDevolucion = fechaDevolucion;
@@ -167,27 +176,25 @@ public class Alquiler {
 	}
 
 	public void facturar() {
-		
+
 		Date fechaActual = new GregorianCalendar().getTime();
-		
+
 		// Le doy que son 100 km por dia, mas de eso es exedente
-		
+
 		float kmExtra = (this.kilometrajeRecorrido - Float.intBitsToFloat(fechaInicio.compareTo(fechaFin) * 100))
-				* this.automovil.getModelo().getCostoKmExcedente();	
-		
+				* this.automovil.getModelo().getCostoKmExcedente();
+
 		float costoDia = this.automovil.getModelo().getCostoDia()
 				* Float.intBitsToFloat(fechaInicio.compareTo(fechaFin));
-		
-		
+
 		float monto = this.cargosExtra + kmExtra + costoDia;
 
 		String detalles = "Costos: /n" + "Cargos Extra: " + String.valueOf(this.cargosExtra) + "/n"
 				+ "Kilometraje Extra: " + String.valueOf(kmExtra) + "/n" + "Cargos por dia: "
 				+ String.valueOf(costoDia) + "/n";
-	
+
 		Factura f = new Factura(detalles, fechaActual, this.cliente, monto);
-		this.automovil.registrarDevolucion(this.kilometrajeRecorrido,
-				this.cantidadCombustible);
+		this.automovil.registrarDevolucion(this.kilometrajeRecorrido, this.cantidadCombustible);
 		this.factura = f;
 
 	}

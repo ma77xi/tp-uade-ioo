@@ -1,6 +1,5 @@
 package view.swing.alquiler;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -16,26 +15,26 @@ import javax.swing.JTextField;
 import util.ErrorGui;
 import util.RespuestaGui;
 import util.Util;
-import view.GuiClienteWeb;
+import view.GuiEmpleado;
 import view.vistas.ReservaView;
 import controller.AlquilerAutos;
 
-public class CancelarReservaPanel extends JPanel implements ActionListener {
+public class AlquilerConReservaPanel extends JPanel implements ActionListener {
 
-	private static final long serialVersionUID = 1401079430111645826L;
+	private static final long serialVersionUID = 7027429706359909333L;
 
-	private GuiClienteWeb gui;
+	private GuiEmpleado gui;
 	private AlquilerAutos sistema;
 
 	private JTextField busqueda;
 	private JLabel busquedaLabel;
 	private JButton buscarButton;
 
-	private DatosAlquilerPanel datosReservaPanel;
+	private DatosAlquilerPanel datosAlquilerPanel;
 
-	private JButton cancelarButton;
+	private JButton generarAlquilerButton;
 
-	public CancelarReservaPanel(AlquilerAutos sistema, GuiClienteWeb gui) {
+	public AlquilerConReservaPanel(AlquilerAutos sistema, GuiEmpleado gui) {
 		this.sistema = sistema;
 		this.gui = gui;
 		this.init();
@@ -70,32 +69,19 @@ public class CancelarReservaPanel extends JPanel implements ActionListener {
 		gBC.gridy = y;
 		gBC.gridx = 0;
 		gBC.gridwidth = 4;
-		this.datosReservaPanel = new DatosAlquilerPanel(sistema);
-		// this.datosReservaPanel.enableAllComponents(false);
+		this.datosAlquilerPanel = new DatosAlquilerPanel(sistema);
 		// TODO : ver habilitación
-		this.add(this.datosReservaPanel, gBC);
+		this.add(this.datosAlquilerPanel, gBC);
 
-		y++;
-
-		gBC.gridy = y;
-		gBC.gridx = 0;
-		gBC.gridwidth = 4;
-		gBC.gridheight = 2;
-		JLabel warning = new JLabel(
-				"<html>Las cancelaciones posteriores a las 48 hs anteriores del inicio de la reserva <br />tendrán una multa.</html>");
-		warning.setForeground(Color.RED);
-		this.add(warning, gBC);
-
-		y++;
 		y++;
 
 		gBC.gridy = y;
 		gBC.gridx = 3;
 		gBC.gridwidth = 1;
 		gBC.gridheight = 1;
-		this.cancelarButton = new JButton("Cancelar");
-		this.cancelarButton.addActionListener(this);
-		this.add(cancelarButton, gBC);
+		this.generarAlquilerButton = new JButton("Cancelar");
+		this.generarAlquilerButton.addActionListener(this);
+		this.add(generarAlquilerButton, gBC);
 
 	}
 
@@ -106,16 +92,15 @@ public class CancelarReservaPanel extends JPanel implements ActionListener {
 			if (Util.numeroValido(this.busqueda.getText())) {
 				ReservaView reservaView = this.sistema.buscarReservaView(Integer.parseInt(this.busqueda.getText()));
 				if (reservaView != null) {
-					this.datosReservaPanel.cargaReserva(reservaView);
-					// this.datosReservaPanel.enableAllComponents(true);
+					this.datosAlquilerPanel.cargaReserva(reservaView, Integer.parseInt(this.busqueda.getText()));
 				} else {
 					Util.mostrarError(this, "No se encontró la reseva número " + this.busqueda.getText());
 				}
 			} else {
 				Util.mostrarError(this, "Número de reserva inválido");
 			}
-		} else if (event.getSource() == this.cancelarButton) {
-			RespuestaGui respuesta = this.datosReservaPanel.cancelarReserva(Long.parseLong(this.busqueda.getText()));
+		} else if (event.getSource() == this.generarAlquilerButton) {
+			RespuestaGui respuesta = this.datosAlquilerPanel.generarAlquilerConReserva();
 			if (respuesta.getTipoRespuesta().equals(ErrorGui.OK)) {
 				JOptionPane.showMessageDialog(this, "Se canceló correctamente la reserva.", "Cancelación Exitosa",
 						JOptionPane.INFORMATION_MESSAGE);

@@ -11,16 +11,20 @@ public class ReservaView {
 	private Long dni;
 	private String modelo;
 	private String marca;
+	private String anio;
+	private String patente;
 	private String fechaInicio;
 	private String fechaFin;
 	private String multaCancelacion;
 
 	public ReservaView(Reserva reserva, Modelo modelo) {
 		this.nombre = reserva.getCliente().getNombre();
-		this.apellido = reserva.getCliente().getNombre();
+		this.apellido = reserva.getCliente().getApellido();
 		this.dni = reserva.getCliente().getDni();
 		this.modelo = modelo.getModelo();
 		this.marca = modelo.getMarca();
+		this.anio = String.valueOf(reserva.getAutomovil().getAnio());
+		this.patente = reserva.getAutomovil().getPatente();
 		this.fechaInicio = Util.parseFecha(reserva.getFechaInicio());
 		this.fechaFin = Util.parseFecha(reserva.getFechaFin());
 		this.multaCancelacion = String.valueOf(reserva.getMultaCancelacion());
@@ -44,6 +48,14 @@ public class ReservaView {
 
 	public String getMarca() {
 		return marca;
+	}
+
+	public String getAnio() {
+		return anio;
+	}
+
+	public String getPatente() {
+		return patente;
 	}
 
 	public String getFechaInicio() {
