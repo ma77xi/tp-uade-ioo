@@ -192,9 +192,9 @@ public class Alquiler {
 		
 		float monto = 0;
 		if (kmExtra > 0) {
-			monto = this.cargosExtra + kmExtra + costoDia;			
+			monto = (this.cargosExtra + kmExtra + costoDia) * (1 - (porcentajeDescuento/100));			
 		} else {
-			monto = this.cargosExtra + costoDia;
+			monto = (this.cargosExtra + costoDia)  * (1 - (porcentajeDescuento/100));
 		}
 
 		String detalles = "Costos: /n" + "Cargos Extra: " + String.valueOf(this.cargosExtra) + "/n"
