@@ -214,7 +214,7 @@ public class GuiEmpleado extends JFrame implements ActionListener, MenuListener 
 
 	public void altaClienteReset() {
 		getContentPane().removeAll();
-		getContentPane().add(new AltaModeloPanel(this.sistema, this));
+		getContentPane().add(new AltaClientePanel(this.sistema, this));
 		getContentPane().revalidate();
 		getContentPane().repaint();
 	}
