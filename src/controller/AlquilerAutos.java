@@ -64,7 +64,7 @@ public class AlquilerAutos {
 		}
 	}
 
-	public RespuestaTransaccion modificarCliente(Long numeroCliente, String nombre, String apellido,
+	public RespuestaTransaccion modificarCliente(int numeroCliente, String nombre, String apellido,
 			Date fechaNacimiento, String domicilio, String telefono, Long dni, String sexo, String nacionalidad) {
 		Cliente c = this.buscarCliente(numeroCliente);
 
