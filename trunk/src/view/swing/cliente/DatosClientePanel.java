@@ -272,7 +272,7 @@ public class DatosClientePanel extends JPanel implements FocusListener {
 	public RespuestaGui modificarCliente(Long numeroCliente) {
 		if (this.todosCamposValidos()) {
 			String sexoSeleccionado = (this.sexoM.isSelected()) ? this.sexoM.getText() : this.sexoF.getText();
-			RespuestaTransaccion respuesta = sistema.modificarCliente(numeroCliente, this.nombre.getText(),
+			RespuestaTransaccion respuesta = sistema.modificarCliente(numeroCliente.intValue(), this.nombre.getText(),
 					this.apellido.getText(), Util.parseFecha(this.fechaNacimiento.getText()), domicilio.getText(),
 					telefono.getText(), Long.parseLong(dni.getText()), sexoSeleccionado, nacionalidad.getText());
 			if (respuesta.getTipoRespuesta().equals(RespuestaSistema.OK)) {
